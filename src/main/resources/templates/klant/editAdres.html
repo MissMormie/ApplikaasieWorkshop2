@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+  <head data-th-replace="fragments/layout :: head">
+    <title>TODO supply a title</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/applikaasie.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  </head>
+  <body>
+    <div class="container">
+      <div data-th-replace="fragments/layout :: header">...</div>
+      <div class="title"><h1>Adres wijzigen</h1></div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div data-th-if="${error != null}" data-th-text="${error}"></div>
+
+          <form data-th-action="@{|/klant/${adres.idAdres}/editAdres|}" data-th-object="${adres}" method="post" class="form-horizontal">
+            <input type="hidden" data-th-field="*{idAdres}"/>
+
+            <div class="form-group">
+              <label for="postcode" class="col-sm-2">Postcode</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" required="required" data-th-field="*{postcode}"/>
+              </div>
+            </div>            
+            <div class="form-group">
+              <label for="huisnummer" class="col-sm-2">Huisnummer *</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" required="required" data-th-field="*{huisnummer}"/>
+              </div>
+            </div>    
+            <div class="form-group">
+              <label for="toevoeging" class="col-sm-2 ">Toevoeging</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" data-th-field="*{toevoeging}"/>
+              </div>
+            </div>       
+            <div class="form-group">
+              <label for="straat" class="col-sm-2">Straat *</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" required="required" readonly="readonly" data-th-field="*{straat}"/>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="woonplaats" class="col-sm-2">Woonplaats</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" required="required" readonly="readonly" data-th-field="*{woonplaats}"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default">Opslaan</button>
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+    <div data-th-replace="fragments/layout :: footer">...</div>    
+  </body>
+</html>
