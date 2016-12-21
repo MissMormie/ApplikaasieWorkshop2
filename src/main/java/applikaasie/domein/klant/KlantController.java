@@ -6,6 +6,7 @@
 package applikaasie.domein.klant;
 
 import applikaasie.domein.klant.adres.Adres;
+import applikaasie.domein.klant.adres.AdresLijst;
 import applikaasie.domein.klant.adres.AdresRepository;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -153,5 +155,19 @@ public class KlantController {
   public String showKlant(@PathVariable int id, Model model) {
     model.addAttribute("klant", klantRepository.getKlantById(id));
     return "klant/klant";
+  }
+  
+  
+  @RequestMapping(value="/nieuw")
+  public String nieuweKlant() {
+    return "klant/nieuw";
+  }
+  
+  @RequestMapping(value="/nieuw", method=POST)
+  public String saveNieuweKlant(@Valid Klant klant, Errors errors, Adres adresLijst, Model model) {
+    int i = 1;
+    i++;
+    return "klant/nieuw";
+    
   }
 }

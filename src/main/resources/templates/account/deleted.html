@@ -16,10 +16,13 @@ and open the template in the editor.
 
   </head>
   <body>
+    <div class="container">
     <div data-th-replace="fragments/layout :: header">...</div>
-    <div>account deleted</div>
+    <div class="title"><h1>Account verwijderd</h1></div>
     
     <div data-th-if="${error != null}" data-th-text="${error}">I wonder, if variable exists...</div>
+        <div data-th-replace="fragments/layout :: footer">...</div>    
 
+    </div>
   </body>
 </html>

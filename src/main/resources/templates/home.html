@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+  <head data-th-replace="fragments/layout :: head">
     <title>Piets Kazen - Kaziger krijg je ze niet</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -11,14 +11,15 @@
 
   </head>
   <body>
-    <div data-th-replace="fragments/layout :: header">...</div>
 
 
     <div class="container">
+      <div data-th-replace="fragments/layout :: header">...</div>
+
       <div class="row">
         <div class="col-sm-8">
           <div>
-            <img src="./images/hollandse-kaas.jpg"/>
+            <img src="/images/hollandse-kaas.jpg"/>
           </div>
         </div>
         <div class="col-sm-4">
@@ -39,13 +40,11 @@
           </form>
         </div>
       </div>
-      <hr/>
+    <div data-th-replace="fragments/layout :: footer">...</div>    
+
     </div>
 
-    <footer class="container-fluid text-center">
-      <p>Footer Text</p>
-
-    </footer>
+  
 
   </body>
 </html>

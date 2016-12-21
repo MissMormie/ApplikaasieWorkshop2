@@ -33,7 +33,7 @@ public class Account implements Serializable, Comparable<Account> {
   private String wachtwoord;
 
   @Column(name = "Accountstatus", nullable = false)
-  private String accountStatus;
+  private String accountStatus = "medewerker";
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "Datum_Aanmaak", nullable = false)
@@ -96,6 +96,10 @@ public class Account implements Serializable, Comparable<Account> {
   }
 
   public String getAccountStatus() {
+    // TODO check if this is necessary here. I want it be right before.
+    if (klant != 0)
+      this.accountStatus = "klant";
+    
     return accountStatus;
   }
 
@@ -117,6 +121,8 @@ public class Account implements Serializable, Comparable<Account> {
   }
 
   public void setKlant(Integer klant) {
+    if (klant != 0)
+      this.accountStatus ="klant";
     this.klant = klant;
   }
 

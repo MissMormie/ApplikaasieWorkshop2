@@ -5,6 +5,9 @@
  */
 package applikaasie.domein.artikel;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+
 /**
  *
  * @author Sonja
@@ -12,9 +15,17 @@ package applikaasie.domein.artikel;
 public class Artikel {
   
     private int id;
+    
+    @NotNull
     private String naam;
+    
+    @NotNull @Digits(integer=6, fraction=2)
     private double prijs;
+
+    @NotNull
     private int voorraad;
+
+
     private boolean deleted;
     
     public Artikel (){};

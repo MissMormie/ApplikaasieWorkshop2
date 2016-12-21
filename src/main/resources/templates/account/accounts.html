@@ -16,19 +16,21 @@ and open the template in the editor.
 
   </head>
   <body>
-    <div data-th-replace="fragments/layout :: header">...</div>
-    <div><h1>accounts</h1></div>
     <div class="container">
+    <div data-th-replace="fragments/layout :: header">...</div>
+    <div class="title"><h1>Accounts</h1></div>
       <div class="row">
         <div class="col-sm-12">
-          <table class="table-striped">
-            <tr><th>id</th><th>Gebuikersnaam</th> <th>Account type</th></tr>
+          <table class="table table-striped">
+            <tr><th>id</th><th>Gebuikersnaam</th> <th>Account type</th><th></th></tr>
             <tr data-th-each="account : ${accountList}">
               <td data-th-text="${account.idAccount}"></td>
               <td data-th-text="${account.gebruikersnaam}"></td>
-              <td data-th-text="${account.accountStatus}"></td>
+              <td></td>
+              <!-- TODO figure out why this suddenly doesn't work? -->
+              <!--<td data-th-text="${account.accountStatus}"></td>-->
               <td>
-                <a href="#" data-th-href="@{/account/edit(id=${account.idAccount})}"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="#" data-th-href="@{/account/edit(id=${account.idAccount})}"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;
                 <a href="#" data-th-href="@{/account/delete(id=${account.idAccount})}"><span class="glyphicon glyphicon-trash"></span></a>
               </td>
 
@@ -37,7 +39,7 @@ and open the template in the editor.
           </table>
         </div>
       </div>
-    </div>
     <div data-th-replace="fragments/layout :: footer">...</div>    
+    </div>
   </body>
 </html>

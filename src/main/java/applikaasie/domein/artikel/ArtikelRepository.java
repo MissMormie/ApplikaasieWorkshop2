@@ -16,6 +16,8 @@ public interface ArtikelRepository {
   // -------------------------- CREATE ------------------------------
   
   public Boolean createArtikel(Artikel artikel);
+  
+  public Boolean updateOrSaveArtikel(Artikel artikel);
 
   // -------------------------- READ --------------------------------
 
@@ -30,5 +32,7 @@ public interface ArtikelRepository {
   // -------------------------- DELETE ------------------------------
   
   public Boolean deleteArtikel(Artikel artikel);
+  
+  public Boolean deleteArtikelById(int id);
   
 }

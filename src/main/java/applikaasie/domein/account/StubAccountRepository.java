@@ -17,10 +17,19 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class StubAccountRepository implements AccountRepository{
 
+    // -------------------------- CREATE ------------------------------
+  
+  @Override
+  public Boolean createAccount(Account account) {
+    return true;
+  }
+
+  // -------------------------- READ --------------------------------
+
   @Override
   public Account getAccountByUsernamePassword(String username, String password) {
-    //return new Account(1, "gebruikersnaam", "wachtwoord", "accountStatus", new Date(), null, false);
-    return null;
+    return new Account(1, "gebruikersnaam", "wachtwoord", "accountStatus", new Date(), null, false);
+    //return null;
   }
 
   @Override
@@ -28,34 +37,33 @@ public class StubAccountRepository implements AccountRepository{
     return createAccountList(15);
   }
   
-
-
-  
   @Override
   public Account getAccountById(long id) {
     return new Account(1, "Sonja", "123", "admin", new Date(), null, false);
   }
 
+  // -------------------------- UPDATE ------------------------------
+  
   @Override
   public Boolean updatePassword(Account account) {
     return true;
   }
 
+  // -------------------------- DELETE ------------------------------
+  
   @Override
   public Boolean deleteAccountById(int accountId) {
     return true;
   }
 
-  @Override
-  public Boolean createAccount(Account account) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
 
+  // -------------------------- HELPERS  ------------------------------
+  
   // TODO remove this function once I've implemented database connection.    
   private List<Account> createAccountList(int count) {
     List<Account> accountsList = new ArrayList<Account>();
     for (int i = 0; i < count; i++) {
-      accountsList.add(new Account(i, "gebruikersnaam" + i, "wachtwoord" + i, "accountStatus", new Date(), null, false));
+      accountsList.add(new Account(i, "Sonja" + i, "123" + i, "admin", new Date(), null, false));
     }
     return accountsList;
   }  

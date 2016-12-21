@@ -9,9 +9,12 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -23,18 +26,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AccountController {
 
   // ------------------ VARIABLES --------------------------------------------
-
   private final AccountRepository accountRepository;
 
   // ------------------ CONSTRUCTOR --------------------------------------------
-
-  @Autowired 
+  @Autowired
   public AccountController(AccountRepository accountRepository) {
     this.accountRepository = accountRepository;
   }
 
   // ------------------ MAPPED METHODS -----------------------------------------
-
   // TODO make list of accounts
   @RequestMapping(value = "/accounts", method = RequestMethod.GET)
   public String accountList(Model model) {
@@ -49,6 +49,39 @@ public class AccountController {
     return "home";
   }
 
+  /**
+   * adds klantId to model and returns view.
+   *
+   * @param klantId
+   * @param model
+   * @return
+   */
+  @RequestMapping(value = "/{klantId}/nieuwAccount")
+  public String nieuwKlantAccount(@PathVariable int klantId, Model model) {
+    model.addAttribute("klantId", klantId);
+    return "account/new";
+  }
+
+  @RequestMapping(value = "/nieuwAccount")
+  public String nieuwKlantAccount(Model model) {
+    return "account/new";
+  }
+
+  @RequestMapping(value = "/nieuwAccount", method = POST)
+  public String saveNieuwAccount(@Valid Account account, Errors errors, Model model) {
+    if(accountRepository.createAccount(account))
+      return "account/newsaved";
+    model.addAttribute("klantId", account.getKlant());
+    model.addAttribute("error", "error");
+    return "account/new";
+  }
+  
+  
+  @RequestMapping(value ="/nieuwAccount/saved")
+  public String nieuwAccountSaved() {
+    return "account/newSaved";
+  }
+
   // TODO show form to change username/password
   // TODO check you may see this info.
   @RequestMapping(value = "/edit", method = GET)
@@ -60,6 +93,7 @@ public class AccountController {
     // return account/edit rename home.html to edit
   }
 
+
   @RequestMapping(value = "/edit", method = RequestMethod.POST)
   public String saveEdit(@Valid Account account, Model model) {
     if (accountRepository.updatePassword(account)) {
@@ -68,18 +102,18 @@ public class AccountController {
     model.addAttribute("error", "Could not save");
     return "account/edit";
   }
-  
 
   @RequestMapping(value = "/login", method = RequestMethod.POST)
   public String login(
           @RequestParam(value = "gebruikersnaam", required = true) String gebruikersnaam,
           @RequestParam(value = "wachtwoord", required = true) String wachtwoord,
           Model model) {
-    
+
     Account account = accountRepository.getAccountByUsernamePassword(gebruikersnaam, wachtwoord);
     if (account == null) {
-      return "redirect:/account/";
+      return "redirect:/";
     }
+    model.addAttribute("account", account);
     return "account/login";
   }
 

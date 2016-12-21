@@ -14,15 +14,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import static org.mockito.Mockito.*;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
-import org.springframework.web.context.WebApplicationContext;
 
 /**
  *
@@ -44,6 +38,21 @@ public class AccountControllerTest {
     mockMvc = standaloneSetup(controller).build();
   }
 
+  @Test
+  public void shouldLogin() throws Exception{
+    String username = "sonja";
+    String password = "123";
+    String url="/account/login";
+    Account account = createAccount(1);
+    when(mockRepository.getAccountByUsernamePassword(username, password)).thenReturn(account);
+    
+    mockMvc.perform(post(url)
+           .param("wachtwoord", password)
+           .param("gebruikersnaam", username))
+           .andExpect(view().name("account/login"))
+           .andExpect(model().attribute("account", account));
+  }
+  
   @Test
   public void testHome() throws Exception {
     mockMvc.perform(get("/account/"))
@@ -117,7 +126,7 @@ public class AccountControllerTest {
   }
   
   private Account createAccount(int i) {
-    return new Account(i, "gebruikersnaam", "wachtwoord", "accountStatus", new Date(), null, false);
+    return new Account(i, "Sonja", "123", "admin", new Date(), null, false);
   }
 
 }

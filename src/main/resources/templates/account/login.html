@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
 <html>
   <head data-th-replace="fragments/layout :: head">
     <title>TODO supply a title</title>
@@ -12,9 +11,14 @@
 
   </head>
   <body>
+    <div class="container">
     <div data-th-replace="fragments/layout :: header">...</div>
-    Login success
+      <div class="row">
+        <div class="col-sm-12"><h1>Welkom <span data-th-text="${account.gebruikersnaam}"></span>!</h1></div>
+      </div>
+   <div data-th-replace="fragments/layout :: footer">...</div>    
 
+    </div>
   </body>
 </html>
 

@@ -14,13 +14,18 @@ import org.springframework.stereotype.Repository;
  * @author Sonja
  */
 @Repository
-public class HibernateArtikelRepository implements ArtikelRepository {
+public class StubArtikelRepository implements ArtikelRepository {
 
   @Override
   public Boolean createArtikel(Artikel artikel) {
     return true;
   }
 
+  public Boolean updateOrSaveArtikel(Artikel artikel) {
+    return true;
+  }
+  
+  
   @Override
   public Artikel getArtikelById(int id) {
     return new Artikel(1, "oude kaas", 12.34, 12, false);
@@ -28,7 +33,7 @@ public class HibernateArtikelRepository implements ArtikelRepository {
 
   @Override
   public List<Artikel> getAllArtikelen() {
-    return createArtikelList(15);
+    return createArtikelList(7);
   }
 
   @Override
@@ -49,5 +54,10 @@ public class HibernateArtikelRepository implements ArtikelRepository {
     }
     return accountsList;
   }    
+
+  @Override
+  public Boolean deleteArtikelById(int id) {
+    return true;
+  }
   
 }
