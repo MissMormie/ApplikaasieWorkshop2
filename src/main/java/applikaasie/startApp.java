@@ -21,7 +21,7 @@ import org.thymeleaf.templateresolver.TemplateResolver;
 @SpringBootApplication
 @RestController
 @Configuration
-@ComponentScan("applikaasie.domein")
+@ComponentScan("applikaasie")
 public class startApp {
 
   public static void main(String[] args) {

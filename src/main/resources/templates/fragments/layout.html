@@ -55,13 +55,16 @@
                   <li><a href="/account/nieuwAccount">Nieuw medewerker account</a></li>
                 </ul>
               </li>
+              <!--
               <li><a class="dropdown-toggle" data-toggle="dropdown" href="#">Instellingen                
                   <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
                   <li><a href="./connectionPool.html">Connection pool</a></li>
                   <li><a href="./database.html">Database</a></li>
-                </ul></li>
+                </ul>
+              </li>
+              -->
               <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Meer
                   <span class="caret"></span>
@@ -81,7 +84,6 @@
                 </ul></li>
             </ul>
           </div>
-          
         </div>
       </nav>  
     </div>
@@ -91,32 +93,32 @@
             <div class="form-group">
               <label for="postcode" class="col-sm-3">Postcode</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" required="required" data-th-name="adresLijst.adressen[__${count}__].postcode"/>
+                <input type="text" class="form-control" required="required" data-th-name="adresLijst[__${count}__].postcode"/>
               </div>
             </div>
             <div class="form-group">
               <label for="huisnummer" class="col-sm-3">Huisnummer *</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" required="required" data-th-name="adresLijst.adressen[__${count}__].huisnummer"/>
+                <input type="text" class="form-control" required="required" data-th-name="adresLijst[__${count}__].huisnummer"/>
               </div>
             </div>    
             <div class="form-group">
               <label for="toevoeging" class="col-sm-3 ">Toevoeging</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" data-th-name="adresLijst.adressen[__${count}__].toevoeging"/>
+                <input type="text" class="form-control" data-th-name="adresLijst[__${count}__].toevoeging"/>
               </div>
             </div>
             <div class="form-group">
               <label for="straat" class="col-sm-3">Straat *</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" required="required" data-th-name="adresLijst.adressen[__${count}__].straat"/>
+                <input type="text" class="form-control" required="required" data-th-name="adresLijst[__${count}__].straat"/>
               </div>
             </div>
 
             <div class="form-group">
               <label for="woonplaats" class="col-sm-3">Woonplaats</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" required="required" data-th-name="adresLijst.adressen[__${count}__].woonplaats"/>
+                <input type="text" class="form-control" required="required" data-th-name="adresLijst[__${count}__].woonplaats"/>
               </div>
             </div>            
             <div><hr/></div>

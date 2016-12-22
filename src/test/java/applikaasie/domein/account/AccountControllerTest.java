@@ -5,6 +5,9 @@
  */
 package applikaasie.domein.account;
 
+import applikaasie.account.AccountController;
+import applikaasie.account.AccountRepository;
+import applikaasie.account.Account;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

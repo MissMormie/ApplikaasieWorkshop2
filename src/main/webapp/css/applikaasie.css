@@ -9,7 +9,7 @@ img.logo{
 
 footer {
     margin-top: 2em;
-    background-color: #f2f2f2;
+    background-color: #000000;
     padding: 1em;
 }
 
@@ -31,4 +31,16 @@ input.aantal {
 
 div.title {
   padding-bottom: 2em;
+}
+
+body { background-color: #EEEEEE; }
+
+div.container { 
+  background-color: #FFFFFF; 
+  padding: 0px;
+}
+
+div.row {
+  padding-right: 20px;
+  padding-left : 20px;
 }

@@ -5,11 +5,14 @@
  */
 package applikaasie.domein.klant;
 
-import applikaasie.domein.klant.adres.Adres;
-import applikaasie.domein.klant.adres.KlantHeeftAdres;
-import applikaasie.domein.klant.adres.AdresType;
-import applikaasie.domein.account.Account;
-import applikaasie.domein.klant.adres.AdresRepository;
+import applikaasie.klant.KlantController;
+import applikaasie.klant.Klant;
+import applikaasie.klant.KlantRepository;
+import applikaasie.klant.adres.Adres;
+import applikaasie.klant.adres.KlantHeeftAdres;
+import applikaasie.klant.adres.AdresType;
+import applikaasie.account.Account;
+import applikaasie.klant.adres.AdresRepository;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

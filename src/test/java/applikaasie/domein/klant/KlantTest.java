@@ -5,6 +5,7 @@
  */
 package applikaasie.domein.klant;
 
+import applikaasie.klant.Klant;
 import java.util.Set;
 import org.junit.Test;
 import static org.junit.Assert.*;
