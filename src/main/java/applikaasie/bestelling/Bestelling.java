@@ -42,7 +42,7 @@ public class Bestelling  implements Serializable{
   private int accountId; // created by 
   private boolean deleted;
 
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "bestelid")
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "bestelling")
   private Set<BestelArtikel> bestelArtikel = new HashSet<>(0);
 
   

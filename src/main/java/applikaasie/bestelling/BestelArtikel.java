@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -36,7 +37,7 @@ public class BestelArtikel implements Serializable {
   private Bestelling bestelling;
 
   @NotNull
-  @OneToMany
+  @OneToOne
   @JoinColumn
   private Artikel artikel;
 

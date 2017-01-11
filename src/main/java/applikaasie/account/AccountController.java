@@ -39,6 +39,7 @@ public class AccountController {
   @RequestMapping(value = "/accounts", method = RequestMethod.GET)
   public String accountList(Model model) {
     model.addAttribute("accountList", accountRepository.getAllAccounts());
+    accountRepository.usernameExists("sonja");
     return "account/accounts";
   }
 

@@ -25,8 +25,11 @@ public class KlantHeeftAdres implements Serializable {
   @JoinColumn(name = "AdresId")
   private Adres adres;
 
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name = "Adres_typeId")
+//  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//  @JoinColumn(name = "Adres_typeId")
+  @Column (name = "Adres_typeId")
+  @Enumerated(EnumType.STRING)
+  @CollectionTable(name="ADRES_TYPE")
   private AdresType adresType;
 
   @Column(name = "Deleted")

@@ -18,12 +18,20 @@ public interface AccountRepository {
   public Boolean createAccount(Account account);
 
   // -------------------------- READ --------------------------------
-
+  /**
+   * Checks for an active account with this username and password. 
+   * Returns null if not found.
+   * @param username
+   * @param password
+   * @return 
+   */
   public Account getAccountByUsernamePassword(String username, String password);
   
   public Account getAccountById(long id);
   
   public List<Account> getAllAccounts();
+  
+  public Boolean usernameExists(String username);
 
   // -------------------------- UPDATE ------------------------------
   

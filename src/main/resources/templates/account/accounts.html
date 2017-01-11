@@ -18,20 +18,20 @@ and open the template in the editor.
   <body>
     <div class="container">
     <div data-th-replace="fragments/layout :: header">...</div>
-    <div class="title"><h1>Accounts</h1></div>
       <div class="row">
+      <div class="title col-sm-12"><h1>Accounts</h1></div>
         <div class="col-sm-12">
           <table class="table table-striped">
             <tr><th>id</th><th>Gebuikersnaam</th> <th>Account type</th><th></th></tr>
             <tr data-th-each="account : ${accountList}">
-              <td data-th-text="${account.idAccount}"></td>
+              <td data-th-text="${account.id}"></td>
               <td data-th-text="${account.gebruikersnaam}"></td>
               <td></td>
               <!-- TODO figure out why this suddenly doesn't work? -->
               <!--<td data-th-text="${account.accountStatus}"></td>-->
               <td>
-                <a href="#" data-th-href="@{/account/edit(id=${account.idAccount})}"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;
-                <a href="#" data-th-href="@{/account/delete(id=${account.idAccount})}"><span class="glyphicon glyphicon-trash"></span></a>
+                <a href="#" data-th-href="@{/account/edit(id=${account.id})}"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;
+                <a href="#" data-th-href="@{/account/delete(id=${account.id})}"><span class="glyphicon glyphicon-trash"></span></a>
               </td>
 
             </tr>

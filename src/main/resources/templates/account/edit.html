@@ -26,13 +26,13 @@ and open the template in the editor.
 
           <div class="col-sm-12">
             <form name="login" action="/account/edit" data-th-object="${account}" method="post" class="horizontal">
-              <input type="hidden" data-th-field="*{idAccount}"/>
+              <input type="hidden" data-th-field="*{id}"/>
               <div class="form-group">
                 <label for="gebruikersnaam" class="col-sm-2">Gebruikersnaam *</label>
                 <div class="col-sm-10">
                   <input type="text" class="form-control" readonly="readonly" required="required" data-th-field="*{gebruikersnaam}"/>
                 </div>
-              </div>          
+              </div>          <br/>
               <div class="form-group">
                 <label for="wachtwoord" class="col-sm-2">Wachtwoord *</label>
                 <div class="col-sm-10">

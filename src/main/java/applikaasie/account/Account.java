@@ -22,7 +22,8 @@ public class Account implements Serializable, Comparable<Account> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  private int idAccount;
+  @Column(name = "id_account")
+  private long id;
 
   @Column(name = "Gebruikersnaam", nullable = false, unique = true)
   @NotNull
@@ -39,7 +40,7 @@ public class Account implements Serializable, Comparable<Account> {
   @Column(name = "Datum_Aanmaak", nullable = false)
   private Date datum_aanmaak = new Date();
 
-  @Column(name = "KlantId", nullable = true)
+  @Column(name = "klant_id", nullable = true)
   private Integer klant;
 
   @Column(name = "Deleted", nullable = false)
@@ -47,7 +48,7 @@ public class Account implements Serializable, Comparable<Account> {
 
   // -------------- Constructor ----------------
   public Account(Integer idAccount, String gebruikersnaam, String wachtwoord, String accountStatus, Date datum_aanmaak, Integer klant, boolean deleted) {
-    this.idAccount = idAccount;
+    this.id = idAccount;
     this.gebruikersnaam = gebruikersnaam;
     this.wachtwoord = wachtwoord;
     this.accountStatus = accountStatus;
@@ -79,12 +80,12 @@ public class Account implements Serializable, Comparable<Account> {
     }
    */
 
-  public int getIdAccount() {
-    return idAccount;
+  public long getId() {
+    return id;
   }
 
-  public void setIdAccount(int idAccount) {
-    this.idAccount = idAccount;
+  public void setId(long id) {
+    this.id = id;
   }
 
   public String getGebruikersnaam() {
@@ -138,14 +139,14 @@ public class Account implements Serializable, Comparable<Account> {
   // ------------------ Private functions -------------------------
   @Override
   public String toString() {
-    return "AccountPojo{" + "idAccount=" + idAccount + ", gebruikersnaam=" + gebruikersnaam + ", wachtwoordHash=" + wachtwoord + ", accountStatus=" + accountStatus + ", datum_aanmaak=" + datum_aanmaak + ", klantId=" + klant + ", deleted=" + deleted + '}';
+    return "AccountPojo{" + "idAccount=" + id + ", gebruikersnaam=" + gebruikersnaam + ", wachtwoordHash=" + wachtwoord + ", accountStatus=" + accountStatus + ", datum_aanmaak=" + datum_aanmaak + ", klantId=" + klant + ", deleted=" + deleted + '}';
   }
 
   @Override
   public int compareTo(Account account) {
-    if(idAccount > account.idAccount)
+    if(id > account.id)
       return 1;
-    if(idAccount < account.idAccount)
+    if(id < account.id)
       return -1;
 
     if(!gebruikersnaam.equals(account.gebruikersnaam) ||
