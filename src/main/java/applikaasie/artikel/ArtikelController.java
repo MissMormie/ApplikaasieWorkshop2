@@ -33,22 +33,22 @@ public class ArtikelController {
   // ------------------ MAPPED METHODS -----------------------------------------
   @RequestMapping(value = "/artikelen")
   public String artikelList(Model model) {
-    model.addAttribute("artikelList", artikelRepository.getAllArtikelen());
+    model.addAttribute("artikelList", artikelRepository.findAllArtikelByDeletedFalse());
     return "artikel/artikelen";
   }
 
   @RequestMapping(value = "/{id}/delete")
-  public String deleteArtikel(@PathVariable int id) {
-    if (artikelRepository.deleteArtikelById(id)) {
-      return "artikel/deleted";
-    }
-    return "error";
+  public String deleteArtikel(@PathVariable long id) {
+    Artikel artikel = artikelRepository.findOne(id);
+    artikel.setDeleted(true);
+    artikelRepository.save(artikel);
+    return "artikel/deleted";
 
   }
 
   @RequestMapping(value = "/{id}/edit")
-  public String editArtikel(@PathVariable int id, Model model) {
-    Artikel artikel = artikelRepository.getArtikelById(id);
+  public String editArtikel(@PathVariable long id, Model model) {
+    Artikel artikel = artikelRepository.findArtikelByIdAndDeletedFalse(id);
     model.addAttribute("artikel", artikel);
     return "artikel/newAndEdit";
   }
@@ -66,7 +66,7 @@ public class ArtikelController {
       return "artikel/newAndEdit";
     }
     // TODO create expection catcher. Aspect spring thing ;)
-    artikelRepository.updateOrSaveArtikel(artikel);
+    artikelRepository.save(artikel);
     // TODO add flash attribute to make sure we can show the artikel once its saved. 
     // Spring site offline atm, so can't look at docs how to do this. 
     return "redirect:/artikel/saved";

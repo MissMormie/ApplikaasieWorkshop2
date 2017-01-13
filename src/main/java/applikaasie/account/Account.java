@@ -6,6 +6,9 @@
 package applikaasie.account;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.*;
@@ -45,6 +48,9 @@ public class Account implements Serializable, Comparable<Account> {
 
   @Column(name = "Deleted", nullable = false)
   private boolean deleted = false;
+  
+  @Transient
+  private String wachtwoordPlainText;
 
   // -------------- Constructor ----------------
   public Account(Integer idAccount, String gebruikersnaam, String wachtwoord, String accountStatus, Date datum_aanmaak, Integer klant, boolean deleted) {
@@ -79,7 +85,6 @@ public class Account implements Serializable, Comparable<Account> {
         this.wachtwoord = makeWachtwoordHash(wachtwoord);
     }
    */
-
   public long getId() {
     return id;
   }
@@ -98,9 +103,10 @@ public class Account implements Serializable, Comparable<Account> {
 
   public String getAccountStatus() {
     // TODO check if this is necessary here. I want it be right before.
-    if (klant != 0)
+    if (klant != 0) {
       this.accountStatus = "klant";
-    
+    }
+
     return accountStatus;
   }
 
@@ -122,8 +128,9 @@ public class Account implements Serializable, Comparable<Account> {
   }
 
   public void setKlant(Integer klant) {
-    if (klant != 0)
-      this.accountStatus ="klant";
+    if (klant != 0) {
+      this.accountStatus = "klant";
+    }
     this.klant = klant;
   }
 
@@ -136,6 +143,10 @@ public class Account implements Serializable, Comparable<Account> {
   }
 
   // ------------------ Public functions -------------------------
+  public void setPlainTextWachtwoord(String wachtwoord) {
+    setWachtwoord(makeWachtwoordHash(wachtwoord));
+  }
+  
   // ------------------ Private functions -------------------------
   @Override
   public String toString() {
@@ -144,19 +155,49 @@ public class Account implements Serializable, Comparable<Account> {
 
   @Override
   public int compareTo(Account account) {
-    if(id > account.id)
+    if (id > account.id) {
       return 1;
-    if(id < account.id)
+    }
+    if (id < account.id) {
       return -1;
+    }
 
-    if(!gebruikersnaam.equals(account.gebruikersnaam) ||
-       !wachtwoord.equals(account.wachtwoord)         ||
-       !accountStatus.equals(account.accountStatus)   ||
-       !Objects.equals(klant, account.klant)          ||
-       deleted != account.deleted)
+    if (!gebruikersnaam.equals(account.gebruikersnaam)
+            || !wachtwoord.equals(account.wachtwoord)
+            || !accountStatus.equals(account.accountStatus)
+            || !Objects.equals(klant, account.klant)
+            || deleted != account.deleted) {
       return 1;
-    
+    }
+
     return 0;
   }
 
+  // ------------------ Public functions -------------------------
+  /**
+   * Hash function from:
+   * http://stackoverflow.com/questions/3103652/hash-string-via-sha-256-in-java
+   *
+   * @param base
+   * @return
+   */
+  private String makeWachtwoordHash(String base) {
+    try {
+      MessageDigest digest = MessageDigest.getInstance("SHA-256");
+      byte[] hash = digest.digest(base.getBytes("UTF-8"));
+      StringBuilder hexString = new StringBuilder();
+
+      for (int i = 0; i < hash.length; i++) {
+        String hex = Integer.toHexString(0xff & hash[i]);
+        if (hex.length() == 1) {
+          hexString.append('0');
+        }
+        hexString.append(hex);
+      }
+
+      return hexString.toString();
+    } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
+      throw new RuntimeException(ex);
+    }
+  }
 }

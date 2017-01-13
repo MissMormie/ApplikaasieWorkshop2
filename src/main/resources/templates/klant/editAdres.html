@@ -22,7 +22,7 @@ and open the template in the editor.
         <div class="col-sm-12">
           <div data-th-if="${error != null}" data-th-text="${error}"></div>
 
-          <form data-th-action="@{|/klant/${adres.idAdres}/editAdres|}" data-th-object="${adres}" method="post" class="form-horizontal">
+          <form data-th-action="@{|/klant/${klant}/${adres.idAdres}/editAdres|}" data-th-object="${adres}" method="post" class="form-horizontal">
             <input type="hidden" data-th-field="*{idAdres}"/>
 
             <div class="form-group">

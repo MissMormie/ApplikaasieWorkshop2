@@ -35,7 +35,7 @@ public class BestellingController {
   
   @RequestMapping(value="nieuweBestelling", method=GET)
   public String nieuweBestelling(Model model) {
-    List artikelen = artikelRepository.getAllArtikelen();
+    List artikelen = artikelRepository.findAllArtikelByDeletedFalse();
     model.addAttribute("artikelLijst", artikelen);
     return "/bestelling/nieuw";
   }
@@ -44,35 +44,37 @@ public class BestellingController {
   // TODO get actual klant id van ingelogde klant. Die bestaat nu nog niet, dus doen we alsof ;)
   @RequestMapping(value="nieuweBestelling", method=POST)
   public String nieuweBestellingOpslaan(BestelArtikelLijst bestelArtikelLijst, Errors errors, Bestelling bestelling, Model model) {
-   int klantId = 2;
+   int klantId = 39;
    bestelling.setKlantId(klantId);
     
    bestelling.setBestelArtikelenList(bestelArtikelLijst);
-   bestellingRepository.updateOrSaveBestelling(bestelling);
+   bestellingRepository.save(bestelling);
    return "/bestelling/saved"; 
   }
   
   @RequestMapping(value="mijnBestellingen")
   // TODO get actual klant id van ingelogde klant. Die bestaat nu nog niet, dus doen we alsof ;)
   public String mijnBestellingen(Model model) {
-    int klantId = 2;
-    List<Bestelling> bestellingenLijst = bestellingRepository.getAllBestellingenByKlantId(klantId);
+    long klantId = 39;
+    List<Bestelling> bestellingenLijst = bestellingRepository.findAllBestellingenByKlantIdAndDeletedFalse(klantId);
     model.addAttribute("bestellingenLijst", bestellingenLijst);
     return "/bestelling/bestellingen";
   }
   
   @RequestMapping(value="{id}/delete")
-  public String deleteBestelling(@PathVariable int id) {
-    bestellingRepository.deleteBestellingById(id);
+  public String deleteBestelling(@PathVariable long id) {
+    Bestelling bestelling = bestellingRepository.findBestellingByIdAndDeletedFalse(id);
+    bestelling.delete();
+    bestellingRepository.save(bestelling);
     return "/bestelling/deleted";
   }
   
   @RequestMapping(value="{id}/edit")
-  public String editBestelling(@PathVariable int id, Model model) {
-    Bestelling bestelling = bestellingRepository.getBestellingById(id);
-    model.addAttribute("bestelling", bestelling);
+  public String editBestelling(@PathVariable long id, Model model) {
+    Bestelling bestelling = bestellingRepository.findBestellingByIdAndDeletedFalse(id);
+    model.addAttribute("bestelLijst", bestelling.getBestelArtikelSet());
     
-    List artikelen = artikelRepository.getAllArtikelen();
+    List artikelen = artikelRepository.findAllArtikelByDeletedFalse();
     model.addAttribute("artikelLijst", artikelen);
 
     return "bestelling/edit";

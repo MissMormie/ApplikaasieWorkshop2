@@ -9,17 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 /**
  *
@@ -33,17 +23,24 @@ public class Bestelling  implements Serializable{
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  private int id;
+  @Column(name = "id_bestelling")
+  private long id;
   
-  private int klantId;
+  @Column(name = "klant_key")
+  private long klantId;
   
   @Temporal(TemporalType.TIMESTAMP)
   private Date bestelDatum = new Date();
-  private int accountId; // created by 
+  
+  // TODO remove this value once people are logged in and I can get the actual accountId.
+  @Column(name = "account_key")
+  private long accountId = 5; // created by 
+  
   private boolean deleted;
 
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "bestelling")
-  private Set<BestelArtikel> bestelArtikel = new HashSet<>(0);
+  @Column(name = "bestel_artikel")
+  private Set<BestelArtikel> bestelArtikelSet = new HashSet<>(0);
 
   
   // ------------ CONSTRUCTORS ---------------------------------
@@ -51,12 +48,12 @@ public class Bestelling  implements Serializable{
   public Bestelling() {
   }
     
-  public Bestelling(int klantKey, int accountKey) {
+  public Bestelling(long klantKey, int accountKey) {
     this.klantId = klantKey;
     this.accountId = accountKey;
   }
 
-  public Bestelling(int klantKey, int accountKey, boolean deleted) {
+  public Bestelling(long klantKey, int accountKey, boolean deleted) {
     this.klantId = klantKey;
     this.accountId = accountKey;
     this.deleted = deleted;
@@ -65,19 +62,19 @@ public class Bestelling  implements Serializable{
   
   // ------------ Getters and Setters ---------------------------------
 
-  public int getId() {
+  public long getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(long id) {
     this.id = id;
   }
 
-  public int getKlantId() {
+  public long getKlantId() {
     return klantId;
   }
 
-  public void setKlantId(int klantId) {
+  public void setKlantId(long klantId) {
     this.klantId = klantId;
   }
 
@@ -89,11 +86,11 @@ public class Bestelling  implements Serializable{
     this.bestelDatum = bestelDatum;
   }
 
-  public int getAccountId() {
+  public long getAccountId() {
     return accountId;
   }
 
-  public void setAccountId(int accountId) {
+  public void setAccountId(long accountId) {
     this.accountId = accountId;
   }
 
@@ -101,16 +98,12 @@ public class Bestelling  implements Serializable{
     return deleted;
   }
 
-  public void setDeleted(boolean deleted) {
-    this.deleted = deleted;
+  public Set<BestelArtikel> getBestelArtikelSet() {
+    return bestelArtikelSet;
   }
 
-  public Set<BestelArtikel> getBestelArtikel() {
-    return bestelArtikel;
-  }
-
-  public void setBestelArtikel(Set<BestelArtikel> bestelArtikel) {
-    this.bestelArtikel = bestelArtikel;
+  public void setBestelArtikelSet(Set<BestelArtikel> bestelArtikelSet) {
+    this.bestelArtikelSet = bestelArtikelSet;
   }
   
 
@@ -118,19 +111,41 @@ public class Bestelling  implements Serializable{
   
   // TODO check what happens when bestelling is changed.
   void setBestelArtikelenList(BestelArtikelLijst bestelLijst) {
-    bestelArtikel.clear();
+//    bestelArtikelSet.clear();
     for(BestelArtikel bestelArtikel : bestelLijst.getBestelArtikelen()) {
-      if(bestelArtikel.getAantal() != 0)
-        this.bestelArtikel.add(bestelArtikel);
+      if(ifBestelArtikelAlreadyInListSetAantal(bestelArtikel)) {
+        break;
+      }
+      if(bestelArtikel.getAantal() != 0) {
+        bestelArtikel.setBestelling(this);
+        this.bestelArtikelSet.add(bestelArtikel);
+      }
     }
   }
   
   public String getBesteldeArtikelen() {
     String artikelen = "";
-    for(BestelArtikel bestelArtikel : this.bestelArtikel) {
+    for(BestelArtikel bestelArtikel : this.bestelArtikelSet) {
       artikelen += bestelArtikel.getAantal() + " x " + bestelArtikel.getArtikel().getNaam() + ", ";
     }
     return artikelen;
+  }
+
+  void delete() {
+    for (BestelArtikel ba: bestelArtikelSet) {
+      ba.delete();
+    }
+    deleted = true;
+  }
+
+  private boolean ifBestelArtikelAlreadyInListSetAantal(BestelArtikel checkBestelArtikel) {
+    for(BestelArtikel ba: bestelArtikelSet) {
+      if(ba.getArtikel().getId() == checkBestelArtikel.getArtikel().getId()) {
+        ba.setAantal(checkBestelArtikel.getAantal());
+        return true;
+      }
+    }
+    return false;
   }
   
 }

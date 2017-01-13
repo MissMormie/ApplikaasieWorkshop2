@@ -27,6 +27,7 @@ and open the template in the editor.
                 <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image"/></div>
                 <div class="panel-footer" align="right">
                   <input type="hidden" data-th-name="bestelArtikelen[__${stat.count}__].artikelId" data-th-value="${artikel.id}"/><span >Aantal 
+                   <!-- TODO figure out how i can get the current aantal -->
                   <input type="text" class="aantal" data-th-name="bestelArtikelen[__${stat.count}__].aantal" data-th-max="${artikel.voorraad}" value="0"/></span>
                 </div>
               </div>

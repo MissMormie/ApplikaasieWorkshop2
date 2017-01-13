@@ -15,22 +15,19 @@ public class KlantHeeftAdres implements Serializable {
   // ------------ VARIABLES ---------------------------------
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Id
-  private int idKlant_heeft_adres;
+  private long idKlant_heeft_adres;
 
   @ManyToOne
-  @JoinColumn(name = "KlantId")
+  @JoinColumn(name = "Klant_Id")
   private Klant klant;
 
-  @OneToOne
-  @JoinColumn(name = "AdresId")
+  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @JoinColumn(name = "Adres_Id")
   private Adres adres;
 
-//  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//  @JoinColumn(name = "Adres_typeId")
-  @Column (name = "Adres_typeId")
-  @Enumerated(EnumType.STRING)
-  @CollectionTable(name="ADRES_TYPE")
-  private AdresType adresType;
+  @OneToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "Adres_typeId")
+  private AdresTypeObject adresType;
 
   @Column(name = "Deleted")
   private boolean deleted = false;
@@ -40,19 +37,25 @@ public class KlantHeeftAdres implements Serializable {
 
   }
 
-  public KlantHeeftAdres(int idKlant_heeft_adres, Klant klant, Adres adres, AdresType adresType) {
+  public KlantHeeftAdres(int idKlant_heeft_adres, Klant klant, Adres adres, AdresTypeObject adresType) {
     this.idKlant_heeft_adres = idKlant_heeft_adres;
     this.klant = klant;
     this.adres = adres;
     this.adresType = adresType;
   }
+  
+  public KlantHeeftAdres(Klant klant, Adres adres, AdresTypeObject adresType) {
+    this.klant = klant;
+    this.adres = adres;
+    this.adresType = adresType;
+  }  
 
   // ------------ Getters and Setters ---------------------------------
-  public int getIdKlant_heeft_adres() {
+  public long getIdKlant_heeft_adres() {
     return idKlant_heeft_adres;
   }
 
-  public void setIdKlant_heeft_adres(int idKlant_heeft_adres) {
+  public void setIdKlant_heeft_adres(long idKlant_heeft_adres) {
     this.idKlant_heeft_adres = idKlant_heeft_adres;
   }
 
@@ -72,11 +75,11 @@ public class KlantHeeftAdres implements Serializable {
     this.adres = adres;
   }
 
-  public AdresType getAdresType() {
+  public AdresTypeObject getAdresTypeObject() {
     return adresType;
   }
 
-  public void setAdresType(AdresType adresType) {
+  public void setAdresType(AdresTypeObject adresType) {
     this.adresType = adresType;
   }
 
@@ -84,8 +87,9 @@ public class KlantHeeftAdres implements Serializable {
     return deleted;
   }
 
-  public void setDeleted(boolean deleted) {
-    this.deleted = deleted;
+  public void delete() {
+    deleted = true;
+    adres.delete();
   }
 
 }

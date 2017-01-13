@@ -5,12 +5,10 @@
  */
 package applikaasie;
 
-import javax.sql.DataSource;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ViewResolver;
 import org.thymeleaf.TemplateEngine;
@@ -19,15 +17,12 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor;
 
 @SpringBootApplication
 @RestController
-@Configuration
 @ComponentScan("applikaasie")
 @PropertySource("classpath:application.properties")
 public class startApp {

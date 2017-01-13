@@ -38,8 +38,8 @@ public class AccountController {
   // TODO make list of accounts
   @RequestMapping(value = "/accounts", method = RequestMethod.GET)
   public String accountList(Model model) {
-    model.addAttribute("accountList", accountRepository.getAllAccounts());
-    accountRepository.usernameExists("sonja");
+    model.addAttribute("accountList", accountRepository.findAllAccountByDeletedFalse());
+//    model.addAttribute("accountList", accountRepository.getAllAccounts());
     return "account/accounts";
   }
 
@@ -70,11 +70,15 @@ public class AccountController {
 
   @RequestMapping(value = "/nieuwAccount", method = POST)
   public String saveNieuwAccount(@Valid Account account, Errors errors, Model model) {
-    if(accountRepository.createAccount(account))
-      return "account/newsaved";
+    accountRepository.save(account);
+    return "account/newsaved";
+      
+    // TODO figure out what happens if save goes wrong and move the code.. 
+    /*
     model.addAttribute("klantId", account.getKlant());
     model.addAttribute("error", "error");
     return "account/new";
+    */
   }
   
   
@@ -97,11 +101,16 @@ public class AccountController {
 
   @RequestMapping(value = "/edit", method = RequestMethod.POST)
   public String saveEdit(@Valid Account account, Model model) {
+    // TODO figure out how to do password hash
+/*    Account a = accountRepository.findOne(account.getId());
+    a.setPlainTextWachtwoord(account.);
+    // TODO look at not valid account possibility
     if (accountRepository.updatePassword(account)) {
       return "redirect:/account/saved";
     }
     model.addAttribute("error", "Could not save");
-    return "account/edit";
+    return "account/edit"; */
+      return "redirect:/account/saved";
   }
 
   @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -110,7 +119,7 @@ public class AccountController {
           @RequestParam(value = "wachtwoord", required = true) String wachtwoord,
           Model model) {
 
-    Account account = accountRepository.getAccountByUsernamePassword(gebruikersnaam, wachtwoord);
+    Account account = accountRepository.getAccountByGebruikersnaamAndWachtwoord(gebruikersnaam, wachtwoord);
     if (account == null) {
       return "redirect:/";
     }
@@ -125,12 +134,13 @@ public class AccountController {
 
   @RequestMapping(value = "/delete")
   public String delete(
-          @RequestParam(value = "id", required = true) int accountId,
+          @RequestParam(value = "id", required = true) long accountId,
           Model model) {
+    Account account = accountRepository.findOne(accountId);
+    account.setDeleted(true);
+    
     // todo check if this user is allowed to delete. Aspect? Can this function only be called if logged in correctly?
-    if (accountRepository.deleteAccountById(accountId) == false) {
-      model.addAttribute("error", "could not delete");
-    }
+    accountRepository.save(account);
     return "account/deleted";
   }
 }

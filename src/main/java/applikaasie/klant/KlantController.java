@@ -5,10 +5,7 @@
  */
 package applikaasie.klant;
 
-import applikaasie.klant.adres.Adres;
-import applikaasie.klant.adres.AdresLijst;
-import applikaasie.klant.adres.AdresRepository;
-import applikaasie.klant.adres.AdresType;
+import applikaasie.klant.adres.*;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,14 +28,17 @@ public class KlantController {
   
   KlantRepository klantRepository;
   AdresRepository adresRepository;
+  AdresTypeObjectRepository adresTypeObjectRepository;
   
   
   // ------------------ CONSTRUCTOR --------------------------------------------
   
   @Autowired  
-  public KlantController(KlantRepository klantRepository, AdresRepository adresRepository) {
+  public KlantController(KlantRepository klantRepository, AdresRepository adresRepository, AdresTypeObjectRepository adresTypeObjectRepository) {
     this.klantRepository = klantRepository;
     this.adresRepository = adresRepository;
+    this.adresTypeObjectRepository = adresTypeObjectRepository;
+    
   }
             
   // ------------------ MAPPED METHODS -----------------------------------------
@@ -50,7 +50,7 @@ public class KlantController {
    */
   @RequestMapping(value="/klanten")
   public String allKlanten(Model model) {
-    model.addAttribute("klantLijst", klantRepository.getAllKlanten());
+    model.addAttribute("klantLijst", klantRepository.findAllKlantByDeletedFalse());
     return "klant/klanten";
   }
 
@@ -62,8 +62,8 @@ public class KlantController {
    * @return 
    */
   @RequestMapping(value="/{id}/editKlant")
-  public String editKlant(@PathVariable int id, Model model) {
-    model.addAttribute("klant", klantRepository.getKlantById(id));
+  public String editKlant(@PathVariable long id, Model model) {
+    model.addAttribute("klant", klantRepository.findOne(id));
     return "klant/editKlant";
   }
   
@@ -74,7 +74,7 @@ public class KlantController {
   public String editKlant(@Valid Klant klant, Errors errors, Model model) {
     if(errors.hasErrors())
       return "klant/editKlant";
-    klantRepository.updateKlant(klant);
+    klantRepository.save(klant);
     return "redirect:/klant/"+ klant.getIdKlant() +"/klant";
   }
 
@@ -85,23 +85,30 @@ public class KlantController {
    * @param model
    * @return 
    */
-  @RequestMapping(value="/{id}/editAdres")
-  public String editAdres(@PathVariable int id, Model model) {
-    model.addAttribute("adres", adresRepository.getAdresById(id));
+  @RequestMapping(value="/{klantId}/{adresId}/editAdres")
+  public String editAdres(@PathVariable int klantId, 
+                          @PathVariable long adresId, Model model) {
+    model.addAttribute("adres", adresRepository.findAdresByIdAdresAndDeletedFalse(adresId));
+    model.addAttribute("klant", klantId);
     return "klant/editAdres";
   }
   
   /**
    * editKlant receives klantInfo through Post method and saves it.
    */
-  @RequestMapping(value="/{id}/editAdres", method = RequestMethod.POST)
-  public String editAdres(@Valid Adres adres, Errors errors, Model model) {
+  @RequestMapping(value="/{klantId}/{adresId}/editAdres", method = RequestMethod.POST)
+  public String editAdres(@PathVariable int klantId, 
+                          @PathVariable int adresId,
+                          @Valid Adres adres, 
+                          Errors errors, 
+                          Model model) {
+    
     if(errors.hasErrors())
       return "klant/" + adres.getIdAdres() + "/editAdres";
-    adresRepository.updateAdres(adres);
+    adresRepository.save(adres);
     
     // TODO find klant id by adres. 
-    return "redirect:/klant/1/klant";
+    return "redirect:/klant/" + klantId + "/klant";
   }
 
   
@@ -122,19 +129,19 @@ public class KlantController {
 
     // Enkel achternaam
     if(voornaam.equals("") && !achternaam.equals("")) 
-      model.addAttribute("klantLijst", klantRepository.getKlantenByAchternaam(achternaam));
+      model.addAttribute("klantLijst", klantRepository.findKlantByAchternaamAndDeletedFalse(achternaam));
     
     // Enkel voornaam
     else if(!voornaam.equals("") && achternaam.equals("")) 
-      model.addAttribute("klantLijst", klantRepository.getKlantenByVoornaam(voornaam));
+      model.addAttribute("klantLijst", klantRepository.findKlantByVoornaamAndDeletedFalse(voornaam));
     
     // Zowel voor als achternaam
     else if(!voornaam.equals("") && !achternaam.equals("")) 
-      model.addAttribute("klantLijst", klantRepository.getKlantenByVoornaamEnAchternaam(voornaam, achternaam));
+      model.addAttribute("klantLijst", klantRepository.findKlantByVoornaamAndAchternaamAndDeletedFalse(voornaam, achternaam));
     
     // Geen achter en voornaam
     else 
-      model.addAttribute("klantLijst", klantRepository.getAllKlanten());
+      model.addAttribute("klantLijst", klantRepository.findAllKlantByDeletedFalse());
     
     return "klant/klanten";
   }
@@ -146,15 +153,17 @@ public class KlantController {
    */
   // TODO add expection in case delete failed, klant does not exists, other corner cases. 
   @RequestMapping(value="/{id}/delete")
-  public String deleteKlant(@PathVariable int id) {
-    klantRepository.deleteKlantById(id);
+  public String deleteKlant(@PathVariable long id) {
+    Klant klant = klantRepository.findOne(id);
+    klant.delete();
+    klantRepository.save(klant);
     return "klant/deleted";
   }
   
   
   @RequestMapping(value="/{id}/klant")
-  public String showKlant(@PathVariable int id, Model model) {
-    model.addAttribute("klant", klantRepository.getKlantById(id));
+  public String showKlant(@PathVariable long id, Model model) {
+    model.addAttribute("klant", klantRepository.findOne(id));
     return "klant/klant";
   }
   
@@ -168,17 +177,19 @@ public class KlantController {
   @RequestMapping(value="/nieuw", method=POST)
   public String saveNieuweKlant(AdresLijst adresLijst, Errors adresErrors, @Valid Klant klant, Errors errors, Model model) {
     // TODO make a smarter way to figure out which adres is which. 
+    // TODO handle errors
+    
     // adres0 = bezorgadres
     // adres1 = factuuradres
     // adres2 = postadres
     // TODO add validation for Adres & Klant. 
-    klant.setAdres(adresLijst.getAdresLijst().get(0), AdresType.BEZORGADRES);
-    klant.setAdres(adresLijst.getAdresLijst().get(1), AdresType.FACTUURADRES);
-    klant.setAdres(adresLijst.getAdresLijst().get(2), AdresType.POSTADRES);
+    klant.setAdres(adresLijst.getAdresLijst().get(0), adresTypeObjectRepository.findAdresTypeObjectByAdresType(AdresType.BEZORGADRES));
+    klant.setAdres(adresLijst.getAdresLijst().get(1), adresTypeObjectRepository.findAdresTypeObjectByAdresType(AdresType.FACTUURADRES));
+    klant.setAdres(adresLijst.getAdresLijst().get(2), adresTypeObjectRepository.findAdresTypeObjectByAdresType(AdresType.POSTADRES));
     
-    klantRepository.updateKlant(klant);
+    klantRepository.save(klant);
     
-    return "redirect:klant/" + klant.getIdKlant() +"/klant";
+    return "redirect:/klant/" + klant.getIdKlant() +"/klant";
   }
   
 }

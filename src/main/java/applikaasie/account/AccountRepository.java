@@ -5,40 +5,54 @@
  */
 package applikaasie.account;
 
+import java.io.Serializable;
 import java.util.List;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+
 
 /**
  *
  * @author Sonja
  */
-public interface AccountRepository {
+public interface AccountRepository extends CrudRepository<Account, Long>{
 
+  /*
+    In Crud Repository: 
+    count(); long
+    delete(id);
+    delete(<T>);
+    deleteAll();
+    exists(id); boolean
+    findAll(); List<T>
+    findAll(Iterable<ID>); List<T>
+    findOne(id); T
+    save(Iterable<S> entities); <S extends T> Iterable<S>
+    save(S entity); <S extends T> S 
+  */
+  
   // -------------------------- CREATE ------------------------------
   
-  public Boolean createAccount(Account account);
+//  public Boolean createAccount(Account account);
 
   // -------------------------- READ --------------------------------
-  /**
-   * Checks for an active account with this username and password. 
-   * Returns null if not found.
-   * @param username
-   * @param password
-   * @return 
-   */
-  public Account getAccountByUsernamePassword(String username, String password);
+
+  public Account getAccountByGebruikersnaamAndWachtwoord(String gebruikersnaam, String wachtwoord);
   
   public Account getAccountById(long id);
   
-  public List<Account> getAllAccounts();
+  public List<Account> findAllAccountByDeletedFalse();
+//  public List<Account> getAllAccounts();
   
-  public Boolean usernameExists(String username);
+  @Query("SELECT CASE WHEN COUNT(u) > 0 THEN 'true' ELSE 'false' END FROM Account a WHERE a.gebruikersnaam = ?1")
+  public Boolean ExistsByGebruikersnaam(String gebruikersnaam);
 
   // -------------------------- UPDATE ------------------------------
   
-  public Boolean updatePassword(Account account);
+//  public Boolean updatePassword(Account account);
 
   // -------------------------- DELETE ------------------------------
 
-  public Boolean deleteAccountById(int accountId);
+  //public Boolean deleteAccountById(int accountId);
   
 }

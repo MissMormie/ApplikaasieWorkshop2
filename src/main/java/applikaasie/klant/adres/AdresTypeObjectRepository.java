@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package applikaasie.artikel;
+package applikaasie.klant.adres;
 
-import java.util.List;
+import java.io.Serializable;
 import org.springframework.data.repository.CrudRepository;
 
 /**
  *
  * @author Sonja
  */
-public interface ArtikelRepository extends CrudRepository<Artikel, Long> {
-  /*
+public interface AdresTypeObjectRepository extends CrudRepository <AdresTypeObject, Long>{
+    /*
     In Crud Repository: 
     count(); long
     delete(id);
@@ -26,11 +26,6 @@ public interface ArtikelRepository extends CrudRepository<Artikel, Long> {
     save(Iterable<S> entities); <S extends T> Iterable<S>
     save(S entity); <S extends T> S 
   */
-
-  // -------------------------- READ --------------------------------
-
-  public Artikel findArtikelByIdAndDeletedFalse(long id);
   
-  public List<Artikel> findAllArtikelByDeletedFalse();
-  
+  public AdresTypeObject findAdresTypeObjectByAdresType(AdresType adresType);
 }

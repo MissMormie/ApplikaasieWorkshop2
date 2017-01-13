@@ -16,10 +16,19 @@ public enum AdresType {
   AdresType(int id) {
     this.id = id;
   }
-  
-  public int id()
-  {
-    return id;
+
+ 
+  public int getValue() { return id; }
+
+  public static AdresType parse(int id) {
+    AdresType right = null; // Default
+    for (AdresType item : AdresType.values()) {
+      if (item.getValue() == id) {
+        right = item;
+        break;
+      }
+    }
+    return right;
   }
 
 }

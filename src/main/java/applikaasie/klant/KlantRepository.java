@@ -6,36 +6,48 @@
 package applikaasie.klant;
 
 import java.util.List;
+import org.springframework.data.repository.CrudRepository;
 
 /**
  *
  * @author Sonja
  */
-public interface KlantRepository {
-
+public interface KlantRepository extends CrudRepository<Klant, Long> {
+  /*
+    In Crud Repository: 
+    count(); long
+    delete(id);
+    delete(<T>);
+    deleteAll();
+    exists(id); boolean
+    findAll(); List<T>
+    findAll(Iterable<ID>); List<T>
+    findOne(id); T
+    save(Iterable<S> entities); <S extends T> Iterable<S>
+    save(S entity); <S extends T> S 
+  */
+  
     // -------------------------- CREATE ------------------------------
   
-  public Boolean createKlant(Klant klant);
+//  public Boolean createKlant(Klant klant);
 
   // -------------------------- READ --------------------------------
- 
-  public Klant getKlantById(long id);
   
-  public List<Klant> getAllKlanten();
+  public List<Klant> findAllKlantByDeletedFalse();
 
-  public List<Klant> getKlantenByVoornaamEnAchternaam(String voornaam, String achternaam);
+  public List<Klant> findKlantByVoornaamAndAchternaamAndDeletedFalse(String voornaam, String achternaam);
   
-  public List<Klant> getKlantenByVoornaam(String voornaam);
+  public List<Klant> findKlantByVoornaamAndDeletedFalse(String voornaam);
 
-  public List<Klant> getKlantenByAchternaam(String achternaam);
+  public List<Klant> findKlantByAchternaamAndDeletedFalse(String achternaam);
 
   // -------------------------- UPDATE ------------------------------
   
-  public Boolean updateKlant(Klant klant);
+//  public Boolean updateKlant(Klant klant);
 
   // -------------------------- DELETE ------------------------------
 
-  public Boolean deleteKlantById(int klantId);
+//  public Boolean deleteKlantById(int klantId);
   
 
 }

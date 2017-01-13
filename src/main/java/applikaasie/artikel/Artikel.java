@@ -6,6 +6,7 @@
 package applikaasie.artikel;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,7 +25,8 @@ public class Artikel implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  private int id;
+  @Column(name="id_artikel")
+  private long id;
 
   @NotNull
   private String naam;
@@ -41,7 +43,7 @@ public class Artikel implements Serializable {
   public Artikel() {
   }
     
-  public Artikel(int id, String naam, double prijs, int voorraad, boolean deleted) {
+  public Artikel(long id, String naam, double prijs, int voorraad, boolean deleted) {
     this.id = id;
     this.naam = naam;
     this.prijs = prijs;
@@ -49,11 +51,11 @@ public class Artikel implements Serializable {
     this.deleted = deleted;
   }
 
-  public int getId() {
+  public long getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(long id) {
     this.id = id;
   }
 

@@ -7,7 +7,10 @@ package applikaasie.klant.adres;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import javax.validation.constraints.Size;
 /**
  *
  * @author Sonja
@@ -19,23 +22,28 @@ public class Adres implements Cloneable, Serializable {
     // ------------ VARIABLES ---------------------------------
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
-    private int idAdres;
+    private long idAdres;
     
+    @Size(max = 45, min = 2)
     @Column (name = "Straat", nullable = false)
     @NotNull
     private String straat;
     
+    @Max(99999)
     @Column (name = "Huisnummer", nullable = false)
     @NotNull
     private int huisnummer;
     
+    @Size(max = 10)
     @Column (name = "Toevoeging", nullable = true)
     private String toevoeging;
     
+    @Size(max = 6, min = 6)
     @Column (name = "Postcode", nullable = false)
     @NotNull
     private String postcode;
     
+    @Size(max = 30)
     @Column (name = "Woonplaats", nullable = false)
     @NotNull
     private String woonplaats;
@@ -54,7 +62,7 @@ public class Adres implements Cloneable, Serializable {
      * @param woonplaats String
      * @param deleted boolean
      */
-    public Adres(int idAdres, String straat, int huisnummer, String toevoeging, String postcode, String woonplaats, boolean deleted) {
+    public Adres(long idAdres, String straat, int huisnummer, String toevoeging, String postcode, String woonplaats, boolean deleted) {
         this.idAdres = idAdres;
         this.straat = straat;
         this.huisnummer = huisnummer;
@@ -68,11 +76,11 @@ public class Adres implements Cloneable, Serializable {
     
     // ------------ Getters and Setters ---------------------------------
 
-    public int getIdAdres() {
+    public long getIdAdres() {
         return idAdres;
     }
 
-    public void setIdAdres(int idAdres) {
+    public void setIdAdres(long idAdres) {
         this.idAdres = idAdres;
     }
 
@@ -111,10 +119,6 @@ public class Adres implements Cloneable, Serializable {
     public boolean isDeleted() {
         return deleted;
     }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }   
 
     public String getPostcode() {
         return postcode;
@@ -156,6 +160,10 @@ public class Adres implements Cloneable, Serializable {
     this.woonplaats = adres.woonplaats;
     if(this.idAdres == 0)
       this.idAdres = adres.idAdres;
+  }
+
+  void delete() {
+    deleted = true;
   }
     
     
