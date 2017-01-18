@@ -5,9 +5,14 @@
  */
 package applikaasie.klant;
 
+import applikaasie.account.Account;
+import applikaasie.account.AccountRepository;
 import applikaasie.klant.adres.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -29,20 +34,79 @@ public class KlantController {
   KlantRepository klantRepository;
   AdresRepository adresRepository;
   AdresTypeObjectRepository adresTypeObjectRepository;
+  AccountRepository accountRepository;
   
   
   // ------------------ CONSTRUCTOR --------------------------------------------
   
   @Autowired  
-  public KlantController(KlantRepository klantRepository, AdresRepository adresRepository, AdresTypeObjectRepository adresTypeObjectRepository) {
+  public KlantController(KlantRepository klantRepository, 
+                          AdresRepository adresRepository, 
+                          AdresTypeObjectRepository adresTypeObjectRepository,
+                          AccountRepository accountRepository) {
     this.klantRepository = klantRepository;
     this.adresRepository = adresRepository;
     this.adresTypeObjectRepository = adresTypeObjectRepository;
-    
+    this.accountRepository = accountRepository;
   }
-            
-  // ------------------ MAPPED METHODS -----------------------------------------
   
+  // ----------------- MODEL ATTRIBUTES ----------------------------------------
+  
+   
+  
+  // ------------------ MAPPED METHODS -----------------------------------------
+  // ------------------ Klanten -----------------------------------------
+
+  @RequestMapping(value="/edit")
+  public String editKlantZelf(Model model, Authentication authentication) {   
+    model.addAttribute("klant", getKlantByAccount(authentication));
+    return "klant/editKlant";
+  }  
+  
+  @RequestMapping(value="/mijngegevens")
+  public String showKlantZelf(Model model, Authentication authentication) {
+    model.addAttribute("klant", getKlantByAccount(authentication));
+    return "klant/klant";
+  }
+  
+  @RequestMapping(value="/{adresId}/editAdres")
+  public String editOwnAdres(@PathVariable long adresId, Model model, Authentication authentication) {
+
+    Klant klant = getKlantByAccount(authentication);
+    Adres adres = klant.heeftDitAdres(adresId);
+    
+    // TODO once Klant throws Exception instead of null remove this check. 
+    if(adres != null) {
+      model.addAttribute("adres", adres);
+      return "klant/editAdres";
+    }
+    return "home";
+  }
+    
+  @RequestMapping(value="/{adresId}/editAdres", method = RequestMethod.POST)
+  public String editOwnAdres(@PathVariable int adresId,
+                          @Valid Adres adres, 
+                          Errors errors, 
+                          Model model,
+                          Authentication authentication) {
+    // Check if this adres belongs to this account
+    Klant klant = getKlantByAccount(authentication);
+    if(klant.heeftDitAdres(adres.getIdAdres()) == null) 
+      return "home";
+    
+    if(errors.hasErrors())
+      return "klant/editAdres";
+    
+    
+    adresRepository.save(adres);
+    
+    // TODO find klant id by adres. 
+    return "redirect:/klant/mijngegevens";
+  }  
+  
+  
+  // ------------------ Admin -----------------------------------------
+
   /**
    * AllKlanten gets a list of all customers and adds it to the model.
    * @param model
@@ -154,6 +218,10 @@ public class KlantController {
   // TODO add expection in case delete failed, klant does not exists, other corner cases. 
   @RequestMapping(value="/{id}/delete")
   public String deleteKlant(@PathVariable long id) {
+    // delete klant accounts
+    deleteAllKlantAccounts(id);
+
+    // delete klant
     Klant klant = klantRepository.findOne(id);
     klant.delete();
     klantRepository.save(klant);
@@ -169,16 +237,27 @@ public class KlantController {
   
   
   @RequestMapping(value="/nieuw")
-  public String nieuweKlant() {
+  public String nieuweKlant(AdresLijst adresLijst, Adres adres, Klant klant, Model model) {
+    // TODO fix the dirty workaround to get this work. Should not need Adres, lijst or klant here.. 
+    List<Adres> adressenLijst = new ArrayList(3);
+    adressenLijst.add(adres);
+    adressenLijst.add(adres);
+    adressenLijst.add(adres);
+    
+    adresLijst.setAdresLijst(adressenLijst);
+    model.addAttribute(adresLijst);
+    model.addAttribute(klant);
     return "klant/nieuw";
   }
   
   
   @RequestMapping(value="/nieuw", method=POST)
-  public String saveNieuweKlant(AdresLijst adresLijst, Errors adresErrors, @Valid Klant klant, Errors errors, Model model) {
+  public String saveNieuweKlant(@Valid AdresLijst adresLijst, Errors adresErrors, @Valid Klant klant, Errors errors, Model model) {
     // TODO make a smarter way to figure out which adres is which. 
     // TODO handle errors
-    
+    if(errors.hasErrors() || adresErrors.hasErrors())
+      return "klant/nieuw";
+
     // adres0 = bezorgadres
     // adres1 = factuuradres
     // adres2 = postadres
@@ -191,5 +270,34 @@ public class KlantController {
     
     return "redirect:/klant/" + klant.getIdKlant() +"/klant";
   }
+
+
+  // ------------------- JSON FUNCTIONS --------------------------------
+  @RequestMapping(value="/postcode", method = RequestMethod.GET, params={"postcode", "huisnummer"}, produces = "application/json")
+  public String getAdresByPostcode(
+          @RequestParam(value="postcode", required=true) String postcode,
+          @RequestParam(value="huisnummer", required=true) int huisnummer,
+          Model model){
+    
+    return "{\"status\":\"ok\",\"street\":\"Sterkenburg\",\"city\":\"Alphen aan den Rijn\",\"municipality\":\"Alphen aan den Rijn\",\"province\":\"Zuid-Holland\",\"postcode\":\"2402RC\",\"pnum\":\"2402\",\"pchar\":\"RC\",\"rd_x\":\"106377.75987500000000000000\",\"rd_y\":\"462560.45733333333333333333\",\"lat\":\"52.1490854191017\",\"lon\":\"4.6767987818837\"}";
+  }
   
+  // ------------------- HELPER FUNCTIONS --------------------------------
+  
+  private Klant getKlantByAccount(Authentication authentication) {
+    String gebruikersnaam = authentication.getName();
+    Account account = accountRepository.getAccountByGebruikersnaamAndDeletedFalse(gebruikersnaam);
+    Klant klant = klantRepository.findOne(account.getKlant());
+    
+    return klant;
+  }
+  
+  private void deleteAllKlantAccounts(long klantId) {
+    List<Account> accounts = accountRepository.findAllAccountByKlantAndDeletedFalse(klantId);
+    for(Account account: accounts) {
+      account.setDeleted(true);
+    }
+    accountRepository.save(accounts);
+
+  }
 }

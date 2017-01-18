@@ -17,10 +17,13 @@ and open the template in the editor.
   <body>
     <div class="container">
       <div data-th-replace="fragments/layout :: header">...</div>
-      <div class="title"><h1>Nieuwe bestelling</h1></div>
         <form name="newOrder" action="/bestelling/nieuweBestelling" method="POST" class="horizontal">
+                      <input type="hidden" 
+                   data-th-name="${_csrf.parameterName}" 
+                   data-th-value="${_csrf.token}" />
+
       <div class="row">
-          <div class="row">
+      <div class="col-sm-12 title"><h1>Nieuwe bestelling</h1></div>
             <div class="col-sm-3" data-th-each="artikel, stat : ${artikelLijst}">
               <div class="panel panel-primary">
                 <div class="panel-heading"><span data-th-text="${artikel.naam}"></span><span class='pull-right'>&euro; <span data-th-text="${artikel.prijs}"></span></span></div>
@@ -32,10 +35,12 @@ and open the template in the editor.
                 </div>
               </div>
             </div>
-          </div>
+          
       </div>
       <div class="row" align="right">
-        <button type="submit" class="btn btn-default input-lg">Bestel</button>
+        <div class="col-sm-12">
+          <button type="submit" class="btn btn-default input-lg">Bestel</button>
+        </div>
       </div>
         </form>
       

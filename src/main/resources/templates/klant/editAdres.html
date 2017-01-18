@@ -17,22 +17,24 @@ and open the template in the editor.
   <body>
     <div class="container">
       <div data-th-replace="fragments/layout :: header">...</div>
-      <div class="title"><h1>Adres wijzigen</h1></div>
       <div class="row">
+      <div class="col-sm-12 title"><h1>Adres wijzigen</h1></div>
         <div class="col-sm-12">
           <div data-th-if="${error != null}" data-th-text="${error}"></div>
-
-          <form data-th-action="@{|/klant/${klant}/${adres.idAdres}/editAdres|}" data-th-object="${adres}" method="post" class="form-horizontal">
+          
+          <form data-th-action="${login == 'klant'} ?
+                @{|/klant/${adres.idAdres}/editAdres|} :
+                @{|/klant/${klant}/${adres.idAdres}/editAdres|}" data-th-object="${adres}" method="post" class="form-horizontal">
             <input type="hidden" data-th-field="*{idAdres}"/>
 
             <div class="form-group">
-              <label for="postcode" class="col-sm-2">Postcode</label>
+              <label for="postcode" data-th-class="${#fields.hasErrors('postcode')}? 'error col-sm-2' : 'col-sm-2'">Postcode</label>
               <div class="col-sm-10">
                 <input type="text" class="form-control" required="required" data-th-field="*{postcode}"/>
               </div>
             </div>
             <div class="form-group">
-              <label for="huisnummer" class="col-sm-2">Huisnummer *</label>
+              <label for="huisnummer" data-th-class="${#fields.hasErrors('huisnummer')}? 'error col-sm-2' : 'col-sm-2'">Huisnummer *</label>
               <div class="col-sm-10">
                 <input type="text" class="form-control" required="required" data-th-field="*{huisnummer}"/>
               </div>

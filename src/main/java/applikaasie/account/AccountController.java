@@ -5,11 +5,15 @@
  */
 package applikaasie.account;
 
+import applikaasie.klant.KlantRepository;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,28 +31,60 @@ public class AccountController {
 
   // ------------------ VARIABLES --------------------------------------------
   private final AccountRepository accountRepository;
+  private final KlantRepository klantRepository;
 
   // ------------------ CONSTRUCTOR --------------------------------------------
   @Autowired
-  public AccountController(AccountRepository accountRepository) {
+  public AccountController(AccountRepository accountRepository, KlantRepository klantRepository) {
     this.accountRepository = accountRepository;
+    this.klantRepository = klantRepository;
   }
 
+  // ----------------- MODEL ATTRIBUTES ----------------------------------------
+  
+
+  
+  
   // ------------------ MAPPED METHODS -----------------------------------------
+  // ------------------ Everyone -----------------------------------------
+  @RequestMapping(value = "/wijzigwachtwoord", method = GET)
+  public String wijzigWachtwoord(Model model, Authentication auth) {
+    model.addAttribute(accountRepository.getAccountByGebruikersnaamAndDeletedFalse(auth.getName()));
+    model.addAttribute("editType", "own");
+    return "account/edit";
+  }
+
+
+  @RequestMapping(value = "/wijzigwachtwoord", method = RequestMethod.POST)
+  public String saveWachtwoord(@Valid Account account, Errors errors, Model model, Authentication auth) {
+    if(errors.hasErrors()) {
+      model.addAttribute("error", "Could not save");
+      return "account/edit"; 
+    }
+
+    Account a = accountRepository.getAccountByGebruikersnaamAndDeletedFalse(auth.getName());
+    a.setWachtwoord(account.getWachtwoord());
+    // TODO look at not valid account possibility
+    accountRepository.save(a);
+    return "redirect:/account/saved";
+    
+  }
+
+  // ------------------ Admin -----------------------------------------
   // TODO make list of accounts
   @RequestMapping(value = "/accounts", method = RequestMethod.GET)
   public String accountList(Model model) {
     model.addAttribute("accountList", accountRepository.findAllAccountByDeletedFalse());
-//    model.addAttribute("accountList", accountRepository.getAllAccounts());
     return "account/accounts";
   }
 
-  // TODO remove this dummy/test method when I no longer need it to understand 
-  // how the rest works. Also shows home at the moment.
-  @RequestMapping(value = "/", method = GET)
-  public String home() {
-    return "home";
+  @RequestMapping(value = "/{klantId}/klantAccounts")
+  public String klantAccountLijst(@PathVariable long klantId, Model model) {
+    model.addAttribute("accountList", accountRepository.findAllAccountByKlantAndDeletedFalse(klantId));
+    model.addAttribute("klant", klantRepository.findOne(klantId));
+    return "account/accounts";
   }
+  
 
   /**
    * adds klantId to model and returns view.
@@ -58,85 +94,89 @@ public class AccountController {
    * @return
    */
   @RequestMapping(value = "/{klantId}/nieuwAccount")
-  public String nieuwKlantAccount(@PathVariable int klantId, Model model) {
+  public String nieuwKlantAccount(@PathVariable int klantId, Model model, Account account) {
     model.addAttribute("klantId", klantId);
+    model.addAttribute(account);
     return "account/new";
   }
 
   @RequestMapping(value = "/nieuwAccount")
-  public String nieuwKlantAccount(Model model) {
+  public String nieuwKlantAccount(Model model, Account account) {
+    model.addAttribute(account);
     return "account/new";
   }
 
+
   @RequestMapping(value = "/nieuwAccount", method = POST)
   public String saveNieuwAccount(@Valid Account account, Errors errors, Model model) {
-    accountRepository.save(account);
-    return "account/newsaved";
-      
-    // TODO figure out what happens if save goes wrong and move the code.. 
-    /*
-    model.addAttribute("klantId", account.getKlant());
-    model.addAttribute("error", "error");
-    return "account/new";
-    */
+    // Was the form filled out correctly?
+    if(errors.hasErrors())
+      return "account/new";
+    
+    // check if gebruikersnaam isn't already in use. 
+    if(!accountRepository.ExistsByGebruikersnaam(account.getGebruikersnaam())) {
+      accountRepository.save(account);
+      return "redirect:/account/saved";
+    }
+    
+    // duplicate gebruikersnaam
+    model.addAttribute("duplicateName", account.getGebruikersnaam());
+    return "account/new";  
   }
-  
+    
   
   @RequestMapping(value ="/nieuwAccount/saved")
   public String nieuwAccountSaved() {
     return "account/newSaved";
   }
 
-  // TODO show form to change username/password
-  // TODO check you may see this info.
+
   @RequestMapping(value = "/edit", method = GET)
   public String showEditAccount(
           @RequestParam(value = "id", required = true) int accountId,
           Model model) {
-    model.addAttribute(accountRepository.getAccountById(accountId));
+    Account account = accountRepository.getAccountByIdAndDeletedFalse(accountId);
+    if (account == null) {
+      throw new AccountNotFoundException();
+    }
+    model.addAttribute(account);
     return "account/edit";
-    // return account/edit rename home.html to edit
+    // TODO? return account/edit rename home.html to edit
   }
 
 
   @RequestMapping(value = "/edit", method = RequestMethod.POST)
-  public String saveEdit(@Valid Account account, Model model) {
-    // TODO figure out how to do password hash
-/*    Account a = accountRepository.findOne(account.getId());
-    a.setPlainTextWachtwoord(account.);
-    // TODO look at not valid account possibility
-    if (accountRepository.updatePassword(account)) {
-      return "redirect:/account/saved";
+  public String saveEdit(@Valid Account account, Errors errors, Model model) {
+    if(errors.hasErrors()) {
+      model.addAttribute("error", "Could not save");
+      return "account/edit"; 
     }
-    model.addAttribute("error", "Could not save");
-    return "account/edit"; */
-      return "redirect:/account/saved";
-  }
 
-  @RequestMapping(value = "/login", method = RequestMethod.POST)
-  public String login(
-          @RequestParam(value = "gebruikersnaam", required = true) String gebruikersnaam,
-          @RequestParam(value = "wachtwoord", required = true) String wachtwoord,
-          Model model) {
-
-    Account account = accountRepository.getAccountByGebruikersnaamAndWachtwoord(gebruikersnaam, wachtwoord);
-    if (account == null) {
-      return "redirect:/";
+    Account updateAccount = accountRepository.getAccountByIdAndDeletedFalse(account.getId());
+    if(updateAccount == null) {
+      throw new AccountNotFoundException();
     }
-    model.addAttribute("account", account);
-    return "account/login";
+    
+    updateAccount.setWachtwoord(account.getWachtwoord());
+    accountRepository.save(updateAccount);
+    return "redirect:/account/saved";
   }
+  
 
   @RequestMapping(value = "/saved")
   public String save() {
     return "account/saved";
   }
+  
 
   @RequestMapping(value = "/delete")
   public String delete(
           @RequestParam(value = "id", required = true) long accountId,
           Model model) {
     Account account = accountRepository.findOne(accountId);
+    if(account == null) {
+      throw new AccountNotFoundException();
+    }
     account.setDeleted(true);
     
     // todo check if this user is allowed to delete. Aspect? Can this function only be called if logged in correctly?

@@ -110,11 +110,11 @@ public class Bestelling  implements Serializable{
   // ------------ DEFAULT FUNCTIONS ------------------------------------------
   
   // TODO check what happens when bestelling is changed.
-  void setBestelArtikelenList(BestelArtikelLijst bestelLijst) {
+  void updateBestelArtikelenList(BestelArtikelLijst bestelLijst) {
 //    bestelArtikelSet.clear();
     for(BestelArtikel bestelArtikel : bestelLijst.getBestelArtikelen()) {
       if(ifBestelArtikelAlreadyInListSetAantal(bestelArtikel)) {
-        break;
+        continue;
       }
       if(bestelArtikel.getAantal() != 0) {
         bestelArtikel.setBestelling(this);
@@ -126,7 +126,9 @@ public class Bestelling  implements Serializable{
   public String getBesteldeArtikelen() {
     String artikelen = "";
     for(BestelArtikel bestelArtikel : this.bestelArtikelSet) {
-      artikelen += bestelArtikel.getAantal() + " x " + bestelArtikel.getArtikel().getNaam() + ", ";
+      if(bestelArtikel.getAantal() != 0) {
+        artikelen += bestelArtikel.getAantal() + " x " + bestelArtikel.getArtikel().getNaam() + ", ";
+      }
     }
     return artikelen;
   }

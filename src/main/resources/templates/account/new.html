@@ -18,32 +18,41 @@ and open the template in the editor.
   <body>
     <div class="container">
       <div data-th-replace="fragments/layout :: header">...</div>
-      <div class="title"><h1>Nieuw <span data-th-if="${klantId != null}">klant </span>Account</h1></div>
       <div class="row">
+
+        <div class="col-sm-12 title"><h1>Nieuw <span data-th-text="${klantId != null}? 'klant' : 'medewerker'"></span> Account</h1></div>
+
         <div class="col-sm-12">
 
           <div data-th-if="${error != null}" data-th-text="${error}"></div>
+            <div class="error"><p data-th-if="not ${duplicateName== null}">De gekozen gebruikersnaam is al in gebruik.</p></div>
 
-            <form name="login" action="/account/nieuwAccount" method="post" class="horizontal">
-              <input type="hidden" data-th-if="${klantId != null}" data-th-value="${klantId}" name="klant" />
-              <div class="form-group">
-                <label for="gebruikersnaam" class="col-sm-2">Gebruikersnaam *</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" required="required" name="gebruikersnaam" autofocus="autofocus" pattern=".{3,30}" title="Minimum 3 karakters."/>
-                </div>
-              </div>          
-              <div class="form-group">
-                <label for="wachtwoord" class="col-sm-2">Wachtwoord *</label>
-                <div class="col-sm-10">
-                  <input type="password" class="form-control" required="required" name="wachtwoord" pattern=".{3,30}" title="Minimum 3 karakters."/>
-                </div>
+          <form name="login" action="/account/nieuwAccount" method="post" class="horizontal" data-th-object="${account}">
+            <div class="alert alert-danger" data-th-if="${#fields.hasErrors('*')}">
+              <p data-th-each="err : ${#fields.errors('*')}" data-th-text="${err}"></p>    
+            </div>              
+            <input type="hidden" 
+                   data-th-name="${_csrf.parameterName}" 
+                   data-th-value="${_csrf.token}" />
+            <input type="hidden" data-th-if="${klantId != null}" data-th-value="${klantId}" name="klant" />
+            <div class="form-group">
+              <label for="gebruikersnaam" data-th-class="${#fields.hasErrors('gebruikersnaam')}? 'error col-sm-2' : 'col-sm-2'">Gebruikersnaam *</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" maxlength="15"  required="required" data-th-field="*{gebruikersnaam}" autofocus="autofocus" pattern=".{3,30}" title="Minimum 3 karakters."/>
               </div>
-              <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                  <button type="submit" class="btn btn-default">Opslaan</button>
-                </div>
+            </div>          
+            <div class="form-group">
+              <label for="wachtwoord" class="col-sm-2">Wachtwoord *</label>
+              <div class="col-sm-10">
+                <input type="password" class="form-control" required="required" name="wachtwoord" pattern=".{3,30}" title="Minimum 3 karakters."/>
               </div>
-            </form>   
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default">Opslaan</button>
+              </div>
+            </div>
+          </form>   
         </div>
       </div>
 

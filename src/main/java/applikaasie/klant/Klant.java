@@ -9,7 +9,10 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.Email;
 
 /**
  *
@@ -40,10 +43,15 @@ public class Klant implements Serializable {
 
   @Size(max = 20)
   @Column(name = "Telefoonnummer")
+  @Pattern(regexp="^(?:0|(?:\\+|00) ?31 ?)(?:(?:[1-9] ?(?:[0-9] ?){8})|"
+                + "(?:6 ?-? ?[1-9] ?(?:[0-9] ?){7})|"
+                + "(?:[1,2,3,4,5,7,8,9]\\d ?-? ?[1-9] ?(?:[0-9] ?){6})|"
+                + "(?:[1,2,3,4,5,7,8,9]\\d{2} ?-? ?[1-9] ?(?:[0-9] ?){5}))$", message="Vul een juist nummer in")
   private String telefoonnummer;
 
   @Size(max = 45)
   @Column(name = "Emailadres")
+  @Email
   private String emailadres;
 
   @Column(name = "Deleted")
@@ -185,6 +193,15 @@ public class Klant implements Serializable {
     }
     deleted = true;
       
+  }
+
+  protected Adres heeftDitAdres(long adresId) {
+    for(KlantHeeftAdres kha : adressen) {
+      if( kha.getAdres().getIdAdres() == adresId)
+        return kha.getAdres();
+    }
+    // TODO throw Exception adres hoort niet bij deze klant. 
+    return null;
   }
 
 }

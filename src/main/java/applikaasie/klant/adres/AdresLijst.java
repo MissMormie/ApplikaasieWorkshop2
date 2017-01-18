@@ -6,6 +6,8 @@
 package applikaasie.klant.adres;
 
 import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -13,6 +15,8 @@ import java.util.List;
  */
 public class AdresLijst {
   
+  @Valid
+  @NotNull        
   List<Adres> adresLijst;
 
   public List<Adres> getAdresLijst() {

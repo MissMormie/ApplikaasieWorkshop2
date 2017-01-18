@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -29,11 +30,13 @@ public class Account implements Serializable, Comparable<Account> {
   private long id;
 
   @Column(name = "Gebruikersnaam", nullable = false, unique = true)
+  @Size(max = 15)
   @NotNull
   private String gebruikersnaam;
 
   @Column(name = "Wachtwoord", nullable = false)
   @NotNull
+  @Size(max = 64)
   private String wachtwoord;
 
   @Column(name = "Accountstatus", nullable = false)
@@ -44,7 +47,7 @@ public class Account implements Serializable, Comparable<Account> {
   private Date datum_aanmaak = new Date();
 
   @Column(name = "klant_id", nullable = true)
-  private Integer klant;
+  private Long klant;
 
   @Column(name = "Deleted", nullable = false)
   private boolean deleted = false;
@@ -53,7 +56,7 @@ public class Account implements Serializable, Comparable<Account> {
   private String wachtwoordPlainText;
 
   // -------------- Constructor ----------------
-  public Account(Integer idAccount, String gebruikersnaam, String wachtwoord, String accountStatus, Date datum_aanmaak, Integer klant, boolean deleted) {
+  public Account(Integer idAccount, String gebruikersnaam, String wachtwoord, String accountStatus, Date datum_aanmaak, Long klant, boolean deleted) {
     this.id = idAccount;
     this.gebruikersnaam = gebruikersnaam;
     this.wachtwoord = wachtwoord;
@@ -123,11 +126,11 @@ public class Account implements Serializable, Comparable<Account> {
     this.datum_aanmaak = Datum_aanmaak;
   }
 
-  public Integer getKlant() {
+  public Long getKlant() {
     return klant;
   }
 
-  public void setKlant(Integer klant) {
+  public void setKlant(Long klant) {
     if (klant != 0) {
       this.accountStatus = "klant";
     }

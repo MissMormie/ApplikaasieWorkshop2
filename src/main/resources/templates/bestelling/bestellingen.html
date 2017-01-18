@@ -17,20 +17,21 @@ and open the template in the editor.
   <body>
     <div class="container">
       <div data-th-replace="fragments/layout :: header">...</div>
-      <div class="title"><h1>Mijn bestellingen</h1></div>
       <div class="row">
+      <div class="col-sm-12 title"><h1>Bestellingen</h1></div>
         <div class="col-sm-12">
-          <table class="table table-striped">
-            <tr><th>Omschrijving</th> <th>Datum</th><th>Opties</th></tr>
-            <tr data-th-if="${bestellingenLijst != null}" data-th-each="bestelling : ${bestellingenLijst}">
+          <table data-th-if="${not #lists.isEmpty(bestellingenLijst)}" class="table table-striped">
+            <tr><th>Omschrijving</th> <th>Datum</th><th data-th-if="${login != 'klant'}">Opties</th></tr>
+            <tr data-th-each="bestelling : ${bestellingenLijst}">
               <td data-th-text="${bestelling.getBesteldeArtikelen()}">1</td>
               <td data-th-text="${bestelling.bestelDatum}"></td>
-              <td>
-                <a href="#" data-th-href="@{|/bestelling/${bestelling.id}/edit|}"><span class="glyphicon glyphicon-pencil"></span></a> &nbsp;&nbsp;
-                <a href="#" data-th-href="@{|/bestelling/${bestelling.id}/delete|}"><span class="glyphicon glyphicon-trash"></span></a>
+              <td data-th-if="${login != 'klant'}">
+                <a href="#" data-th-href="@{|/bestelling/admin/${bestelling.id}/edit|}"><span class="glyphicon glyphicon-pencil"></span></a> &nbsp;&nbsp;
+                <a href="#" data-th-href="@{|/bestelling/admin/${bestelling.id}/delete|}"><span class="glyphicon glyphicon-trash"></span></a>
               </td>
             </tr>
-          </table>          
+          </table>   
+          <span  data-th-if="${#lists.isEmpty(bestellingenLijst)}">Je hebt nog geen bestellingen.</span>
         </div>
       </div>
       <div data-th-replace="fragments/layout :: footer">...</div>    

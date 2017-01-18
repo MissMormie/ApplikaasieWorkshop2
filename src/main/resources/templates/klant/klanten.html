@@ -49,7 +49,8 @@ and open the template in the editor.
               <td data-th-text="${klant.telefoonnummer}"></td>
               <td data-th-text="${klant.emailadres}"></td>
               <td>
-                <a href="#" data-th-href="@{|/account/${klant.idKlant}/nieuwAccount|}"><span class="glyphicon glyphicon-user"></span></a> &nbsp;&nbsp;
+                <a href="#" data-sec-authorize="hasAuthority('admin')" data-th-href="@{|/account/${klant.idKlant}/klantAccounts|}"><span class="glyphicon glyphicon-user"></span></a> &nbsp;
+                <a href="#" data-th-href="@{|/bestelling/${klant.idKlant}/klant|}"><span class="glyphicon glyphicon-shopping-cart"></span></a> &nbsp;
                 <a href="#" data-th-href="@{|/klant/${klant.idKlant}/delete|}"><span class="glyphicon glyphicon-trash"></span></a>
               </td>
             </tr>

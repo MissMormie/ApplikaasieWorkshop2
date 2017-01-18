@@ -7,9 +7,12 @@ package applikaasie.artikel;
 
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -29,6 +32,18 @@ public class ArtikelController {
   public ArtikelController(ArtikelRepository artikelRepository) {
     this.artikelRepository = artikelRepository;
   }
+  
+  // ----------------- MODEL ATTRIBUTES ----------------------------------------
+  
+  // Thymeleaf zou automatisch gegevens van login rollen moeten hebben, maar krijg dat niet werkend, daarom deze work-around in elke controller. 
+  // TODO: Get it working!
+  @ModelAttribute("login")
+  public String addLogin(Authentication auth) {
+    for(GrantedAuthority a: auth.getAuthorities()) {
+      return a.getAuthority();
+    }
+    return "";    
+  }  
 
   // ------------------ MAPPED METHODS -----------------------------------------
   @RequestMapping(value = "/artikelen")

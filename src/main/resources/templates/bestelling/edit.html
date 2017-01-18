@@ -17,28 +17,34 @@ and open the template in the editor.
   <body>
     <div class="container">
       <div data-th-replace="fragments/layout :: header">...</div>
-      <div class="title"><h1>Nieuwe bestelling</h1></div>
-        <form name="newOrder" action="/bestelling/nieuweBestelling" method="POST" class="horizontal">
-      <div class="row">
+
+      <form name="newOrder" data-th-action="@{|/bestelling/admin/${bestelId}/edit|}" method="POST" class="horizontal">
+        <input type="hidden" 
+               data-th-name="${_csrf.parameterName}" 
+               data-th-value="${_csrf.token}" />      <div class="row">
           <div class="row">
+            <div class="title col-sm-12"><h1>Wijzig bestelling</h1></div>
             <div class="col-sm-3" data-th-each="artikel, stat : ${artikelLijst}">
               <div class="panel panel-primary">
                 <div class="panel-heading"><span data-th-text="${artikel.naam}"></span><span class='pull-right'>&euro; <span data-th-text="${artikel.prijs}"></span></span></div>
                 <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image"/></div>
                 <div class="panel-footer" align="right">
-                  <input type="hidden" data-th-name="bestelArtikelen[__${stat.count}__].artikelId" data-th-value="${artikel.id}"/><span >Aantal 
-                   <!-- TODO figure out how i can get the current aantal -->
-                  <input type="text" class="aantal" data-th-name="bestelArtikelen[__${stat.count}__].aantal" data-th-max="${artikel.voorraad}" value="0"/></span>
+                  <input type="hidden" data-th-name="bestelArtikelen[__${stat.count}-1__].artikel.id" data-th-value="${artikel.id}"/><span >Aantal 
+
+                    <!-- TODO figure out how i can get the current aantal -->
+                    <input type="text" class="aantal" data-th-name="bestelArtikelen[__${stat.count}-1__].aantal" data-th-max="${artikel.voorraad}" data-th-value="${bestelMap.containsKey(artikel.id)} ? ${bestelMap[artikel.id]} : 0 "/></span>
                 </div>
               </div>
             </div>
           </div>
-      </div>
-      <div class="row" align="right">
-        <button type="submit" class="btn btn-default input-lg">Bestel</button>
-      </div>
-        </form>
-      
+        </div>
+        <div class="row" align="right">
+          <div class="col-sm-12">
+          <button type="submit" class="btn btn-default input-lg">Bestel</button>
+          </div>
+        </div>
+      </form>
+
       <div data-th-replace="fragments/layout :: footer">...</div>    
 
     </div>

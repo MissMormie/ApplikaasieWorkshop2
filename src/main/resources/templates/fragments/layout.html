@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
-<head data-th-fragment="head">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+  <head data-th-fragment="head">
     <title>Piets Kazen - Kaziger krijg je ze niet</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -24,15 +25,17 @@
           </div>        
           <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar-left">
-              <li><a class="dropdown-toggle" data-toggle="dropdown" href="#">Bestellingen
+              <li data-sec-authorize="isAuthenticated()"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Bestellingen
                   <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a href="/bestelling/nieuweBestelling.html">Nieuwe bestelling</a></li>
-                  <li><a href="/bestelling/mijnBestellingen.html">Bekijk bestellingen</a></li>
+                  <li data-sec-authorize="hasAuthority('klant')"><a href="/bestelling/nieuweBestelling.html">Nieuwe bestelling</a></li>
+                  <li data-sec-authorize="hasAuthority('klant')"><a href="/bestelling/mijnBestellingen.html">Bekijk bestellingen</a></li>
+                  <li data-sec-authorize="hasAnyAuthority('admin', 'medewerker')"><a href="/bestelling/alleBestellingen.html">Bekijk bestellingen</a></li>
+
                 </ul>
               </li>
-              <li><a class="dropdown-toggle" data-toggle="dropdown" href="#">Artikelen
+              <li data-sec-authorize="hasAnyAuthority('admin', 'medewerker')"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Artikelen
                   <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
@@ -40,14 +43,14 @@
                   <li><a href="/artikel/artikelen">Bekijk Artikelen</a></li>
                 </ul>
               </li>            
-              <li><a class="dropdown-toggle" data-toggle="dropdown" href="#">Klanten                
+              <li data-sec-authorize="hasAnyAuthority('admin', 'medewerker')"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Klanten                
                   <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
                   <li><a href="/klant/nieuw">Nieuwe klant</a></li>
                   <li><a href="/klant/klanten">Bekijk alle klanten</a></li>
                 </ul></li>
-              <li><a class="dropdown-toggle" data-toggle="dropdown" href="#">Accounts   
+              <li data-sec-authorize="hasAuthority('admin')"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Accounts   
                   <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
@@ -75,12 +78,13 @@
               </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li><a class="dropdown-toggle" data-toggle="dropdown" href="#">Account                
+              <li data-sec-authorize="isAuthenticated()"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Account                
                   <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a href="/account/edit?id=1">Wijzig wachtwoord</a></li>
-                  <li><a href="/klant/1/klant">Wijzig persoonsgegevens</a></li>
+                  <li><a href="/account/wijzigwachtwoord">Wijzig wachtwoord</a></li>
+                  <li data-sec-authorize="hasAuthority('klant')"><a href="/klant/mijngegevens">Bekijk persoonsgegevens</a></li>
+                  <li><a data-th-href="@{/logout}">Uitloggen</a></li>
                 </ul></li>
             </ul>
           </div>
@@ -89,36 +93,38 @@
     </div>
     <div class="container">
       <div class="row">
-          <div class="col-sm-7"  data-th-fragment="adres(count)">
+          <div class="col-sm-7"  data-th-fragment="adres(count)" data-th-object="${adresLijst.adresLijst[__${count}__]}">
             <div class="form-group">
               <label for="postcode" class="col-sm-3">Postcode</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" required="required" data-th-name="adresLijst[__${count}__].postcode" maxlength="6"/>
+                <input type="text" class="form-control" required="required" 
+                       data-th-class="*{#fields.hasErrors('postcode')} ? 'error form-control' : 'form-control'"
+                       data-th-field="*{postcode}" maxlength="6" data-th-errorclass="fieldError"/>
               </div>
             </div>
             <div class="form-group">
               <label for="huisnummer" class="col-sm-3">Huisnummer *</label>
               <div class="col-sm-9">
-                <input type="number" class="form-control" required="required" data-th-name="adresLijst[__${count}__].huisnummer"/>
+                <input type="number" class="form-control" required="required" data-th-field="*{huisnummer}"  data-th-errorclass="fieldError" />
               </div>
             </div>    
             <div class="form-group">
               <label for="toevoeging" class="col-sm-3 ">Toevoeging</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" maxlength="10" data-th-name="adresLijst[__${count}__].toevoeging"/>
+                <input type="text" class="form-control" maxlength="10" data-th-field="*{toevoeging}" data-th-errorclass="fieldError"/>
               </div>
             </div>
             <div class="form-group">
               <label for="straat" class="col-sm-3">Straat *</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" maxlength="45" required="required" data-th-name="adresLijst[__${count}__].straat"/>
+                <input type="text" class="form-control" maxlength="45" required="required" data-th-field="*{straat}" data-th-errorclass="fieldError"/>
               </div>
             </div>
 
             <div class="form-group">
               <label for="woonplaats" class="col-sm-3">Woonplaats *</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" maxlength="30" required="required" data-th-name="adresLijst[__${count}__].woonplaats"/>
+                <input type="text" class="form-control" maxlength="30" required="required" data-th-field="*{woonplaats}" data-th-errorclass="fieldError"/>
               </div>
             </div>            
             <div><hr/></div>

@@ -32,7 +32,8 @@ and open the template in the editor.
             <span class="glyphicon glyphicon-envelope"></span> <span data-th-text="${klant.emailadres}">'t</span><br/>
             <span class="glyphicon glyphicon-earphone"></span> <span data-th-text="${klant.telefoonnummer}">'t</span><br/><br/>
           </div>
-          <div class="col-sm-6"><a href="#" data-th-href="@{|/klant/${klant.idKlant}/editKlant|}"><span class="glyphicon glyphicon-pencil"></span></a>
+          <div class="col-sm-6">
+            <a href="#" data-th-href="${login == 'klant'}? @{/klant/edit} : @{|/klant/${klant.idKlant}/editKlant|}"><span class="glyphicon glyphicon-pencil"></span></a>
           </div>
         </div>
       </div>
@@ -52,7 +53,9 @@ and open the template in the editor.
             </address>
             </div>
             <div class="col-sm-1" >
-              <a href="#" data-th-href="@{|/klant/${klant.idKlant}/${klant_heeft_adres.adres.idAdres}/editAdres|}"><span class="glyphicon glyphicon-pencil"></span></a>
+              <a href="#" data-th-href="${login == 'klant'}? 
+                 @{|/klant/${klant_heeft_adres.adres.idAdres}/editAdres|} : 
+                 @{|/klant/${klant.idKlant}/${klant_heeft_adres.adres.idAdres}/editAdres|}"><span class="glyphicon glyphicon-pencil"></span></a>
             </div>
           </div>
       </div>

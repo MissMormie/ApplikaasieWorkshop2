@@ -39,13 +39,18 @@ public interface AccountRepository extends CrudRepository<Account, Long>{
 
   public Account getAccountByGebruikersnaamAndWachtwoord(String gebruikersnaam, String wachtwoord);
   
-  public Account getAccountById(long id);
+  public Account getAccountByIdAndDeletedFalse(long id);
+  
+  public Account getAccountByGebruikersnaamAndDeletedFalse(String gebruikersnaam);
+  
+  public List<Account> findAllAccountByKlantAndDeletedFalse(Long id);
   
   public List<Account> findAllAccountByDeletedFalse();
 //  public List<Account> getAllAccounts();
   
-  @Query("SELECT CASE WHEN COUNT(u) > 0 THEN 'true' ELSE 'false' END FROM Account a WHERE a.gebruikersnaam = ?1")
+  @Query("SELECT CASE WHEN COUNT(gebruikersnaam) > 0 THEN 'true' ELSE 'false' END FROM Account a WHERE a.gebruikersnaam = ?1")
   public Boolean ExistsByGebruikersnaam(String gebruikersnaam);
+  
 
   // -------------------------- UPDATE ------------------------------
   

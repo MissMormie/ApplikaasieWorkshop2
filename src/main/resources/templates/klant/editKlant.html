@@ -18,8 +18,8 @@ and open the template in the editor.
   <body>
     <div class="container">
       <div data-th-replace="fragments/layout :: header">...</div>
-      <div class="title"><h1>Gegevens wijzigen</h1></div>
       <div class="row">
+      <div class="col-sm-12 title"><h1>Gegevens wijzigen</h1></div>
         <div class="col-sm-12">
           <div data-th-if="${error != null}" data-th-text="${error}"></div>
 

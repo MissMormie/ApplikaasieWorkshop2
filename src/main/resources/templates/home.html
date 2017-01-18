@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
   <head data-th-replace="fragments/layout :: head">
     <title>Piets Kazen - Kaziger krijg je ze niet</title>
     <meta charset="utf-8"/>
@@ -17,20 +17,28 @@
       <div data-th-replace="fragments/layout :: header">...</div>
 
       <div class="row">
+        <!--
+        <div sec:authorize="hasAuthority('admin')">test</div>
+        <div data-sec-authorize="isAuthenticated()">Only authenticated<span data-sec-authentication="principal.authorities"></span></div>
+        -->
         <div class="col-sm-8">
           <div>
             <img src="/images/hollandse-kaas.jpg"/>
           </div>
         </div>
-        <div class="col-sm-4">
-          <form name="login" action="/account/login" method="POST" class="horizontal">
+        <div class="col-sm-4" data-sec-authorize="not isAuthenticated()">
+          <form name="f" action="/" method="POST" class="horizontal">
+
+            <input type="hidden" 
+                   data-th-name="${_csrf.parameterName}" 
+                   data-th-value="${_csrf.token}" />
             <div class="input-group">
               <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-              <input id="email" type="text" class="form-control input-lg" name="gebruikersnaam" placeholder="Gebruikersnaam"/>
+              <input id="email" type="text" class="form-control input-lg" name="username" placeholder="Gebruikersnaam"/>
             </div>
             <div class="input-group">
               <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-              <input id="password" type="password" class="form-control input-lg" name="wachtwoord" placeholder="Wachtwoord"/>
+              <input id="password" type="password" class="form-control input-lg" name="password" placeholder="Wachtwoord"/>
             </div>
             <div class="form-group"> 
               <div class="col-sm-offset-10 col-sm-2">
@@ -40,11 +48,11 @@
           </form>
         </div>
       </div>
-    <div data-th-replace="fragments/layout :: footer">...</div>    
+      <div data-th-replace="fragments/layout :: footer">...</div>    
 
     </div>
 
-  
+
 
   </body>
 </html>

@@ -91,7 +91,7 @@ public class AccountControllerTest {
     Account expectedAccount = createAccount(1);
     
     // Set reaction of mock repository
-    when(mockRepository.getAccountById(1)).thenReturn(expectedAccount);
+    when(mockRepository.getAccountByIdAndDeletedFalse(1)).thenReturn(expectedAccount);
     
     // check result equals expected
     mockMvc.perform(get(url))

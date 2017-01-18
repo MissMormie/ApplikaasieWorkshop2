@@ -17,40 +17,43 @@ and open the template in the editor.
   <body>
     <div class="container">
       <div data-th-replace="fragments/layout :: header">...</div>
-      <div class="title"><h1>Nieuwe klant</h1></div>
       <form name="newOrder" action="/klant/nieuw" method="POST" class="form-horizontal">
+        <input type="hidden" 
+               data-th-name="${_csrf.parameterName}" 
+               data-th-value="${_csrf.token}" />
         <div class="row">
+          <div class="title col-sm-12"><h1>Nieuwe klant</h1></div>
           <div class="col-sm-7">
             <h3>Klantgegevens</h3>
 
             <div class="form-group">
               <label for="voornaam" class="col-sm-3">Voornaam *</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" required="required" name="voornaam" autofocus="autofocus"/>
+                <input type="text" class="form-control" required="required" data-th-field="${klant.voornaam}" autofocus="autofocus" data-th-errorclass="fieldError"/>
               </div>
             </div>
             <div class="form-group">
               <label for="tussenvoegel" class="col-sm-3">Tussenvoegsel</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" name="tussenvoegsel"/>
+                <input type="text" class="form-control" data-th-field="${klant.tussenvoegsel}" data-th-errorclass="fieldError"/>
               </div>
             </div>    
             <div class="form-group">
               <label for="achternaam" class="col-sm-3 ">Achternaam *</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" required="required" name="achternaam"/>
+                <input type="text" class="form-control" required="required" data-th-field="${klant.achternaam}" data-th-errorclass="fieldError"/>
               </div>
             </div>       
             <div class="form-group">
               <label for="telefoonnummer" class="col-sm-3">Telefoon</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" name="telefoonnummer"/>
+                <input type="text" class="form-control" data-th-field="${klant.telefoonnummer}" data-th-errorclass="fieldError"/>
               </div>
             </div>
             <div class="form-group">
               <label for="emailadres" class="col-sm-3">E-mail</label>
               <div class="col-sm-9">
-                <input type="email" class="form-control" name="emailadres"/>
+                <input type="email" class="form-control" data-th-field="${klant.emailadres}" data-th-errorclass="fieldError"/>
               </div>
             </div>
 
@@ -79,7 +82,7 @@ and open the template in the editor.
           </div>
           <div class="col-sm-7" data-th-replace="fragments/layout :: adres(2)">
           </div>
-        </div>        
+        </div>
         <div class="row">
           <div class="col-sm-12">        
             <div class="form-group">
