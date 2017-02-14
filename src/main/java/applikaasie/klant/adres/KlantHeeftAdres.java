@@ -1,6 +1,7 @@
 package applikaasie.klant.adres;
 
 import applikaasie.klant.Klant;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -17,6 +18,7 @@ public class KlantHeeftAdres implements Serializable {
   @Id
   private long idKlant_heeft_adres;
 
+  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "Klant_Id")
   private Klant klant;

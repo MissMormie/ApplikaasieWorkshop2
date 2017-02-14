@@ -5,14 +5,8 @@
  */
 package applikaasie.home;
 
-import applikaasie.account.Account;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -27,8 +21,12 @@ public class HomeController {
   // ------------------ MAPPED METHODS -----------------------------------------
   @RequestMapping(value="/")
   public String homePage(Authentication auth) {
-    
     return "home";
+  }
+  
+  @RequestMapping(value="/rest")
+  public String restHomePage() {
+    return "rest/rest";
   }
   
 }

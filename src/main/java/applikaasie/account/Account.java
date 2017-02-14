@@ -105,11 +105,6 @@ public class Account implements Serializable, Comparable<Account> {
   }
 
   public String getAccountStatus() {
-    // TODO check if this is necessary here. I want it be right before.
-    if (klant != 0) {
-      this.accountStatus = "klant";
-    }
-
     return accountStatus;
   }
 
@@ -131,10 +126,12 @@ public class Account implements Serializable, Comparable<Account> {
   }
 
   public void setKlant(Long klant) {
-    if (klant != 0) {
+    if (klant != null) {
+      this.klant = klant;
       this.accountStatus = "klant";
+    } else {
+      this.klant = null;      
     }
-    this.klant = klant;
   }
 
   public boolean isDeleted() {

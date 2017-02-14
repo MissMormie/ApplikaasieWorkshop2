@@ -273,6 +273,7 @@ public class KlantController {
 
 
   // ------------------- JSON FUNCTIONS --------------------------------
+  /*
   @RequestMapping(value="/postcode", method = RequestMethod.GET, params={"postcode", "huisnummer"}, produces = "application/json")
   public String getAdresByPostcode(
           @RequestParam(value="postcode", required=true) String postcode,
@@ -281,7 +282,7 @@ public class KlantController {
     
     return "{\"status\":\"ok\",\"street\":\"Sterkenburg\",\"city\":\"Alphen aan den Rijn\",\"municipality\":\"Alphen aan den Rijn\",\"province\":\"Zuid-Holland\",\"postcode\":\"2402RC\",\"pnum\":\"2402\",\"pchar\":\"RC\",\"rd_x\":\"106377.75987500000000000000\",\"rd_y\":\"462560.45733333333333333333\",\"lat\":\"52.1490854191017\",\"lon\":\"4.6767987818837\"}";
   }
-  
+  */
   // ------------------- HELPER FUNCTIONS --------------------------------
   
   private Klant getKlantByAccount(Authentication authentication) {

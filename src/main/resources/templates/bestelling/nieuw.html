@@ -17,33 +17,33 @@ and open the template in the editor.
   <body>
     <div class="container">
       <div data-th-replace="fragments/layout :: header">...</div>
-        <form name="newOrder" action="/bestelling/nieuweBestelling" method="POST" class="horizontal">
-                      <input type="hidden" 
-                   data-th-name="${_csrf.parameterName}" 
-                   data-th-value="${_csrf.token}" />
+      <form name="newOrder" action="/bestelling/nieuweBestelling" method="POST" class="horizontal">
+        <input data-th-if="${_csrf}" type="hidden" 
+               data-th-name="${_csrf.parameterName}" 
+               data-th-value="${_csrf.token}" />
 
-      <div class="row">
-      <div class="col-sm-12 title"><h1>Nieuwe bestelling</h1></div>
-            <div class="col-sm-3" data-th-each="artikel, stat : ${artikelLijst}">
-              <div class="panel panel-primary">
-                <div class="panel-heading"><span data-th-text="${artikel.naam}"></span><span class='pull-right'>&euro; <span data-th-text="${artikel.prijs}"></span></span></div>
-                <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image"/></div>
-                <div class="panel-footer" align="right">
-                  <input type="hidden" data-th-name="bestelArtikelen[__${stat.count}-1__].artikel.id" data-th-value="${artikel.id}"/><span >Aantal 
+        <div class="row">
+          <div class="col-sm-12 title"><h1>Nieuwe bestelling</h1></div>
+          <div class="col-sm-3" data-th-each="artikel, stat : ${artikelLijst}">
+            <div class="panel panel-primary">
+              <div class="panel-heading"><span data-th-text="${artikel.naam}"></span><span class='pull-right'>&euro; <span data-th-text="${artikel.prijs}"></span></span></div>
+              <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image"/></div>
+              <div class="panel-footer" align="right">
+                <input type="hidden" data-th-name="bestelArtikelen[__${stat.count}-1__].artikel.id" data-th-value="${artikel.id}"/><span >Aantal 
                   <input type="hidden" data-th-name="bestelArtikelen[__${stat.count}-1__].bezorgd" data-th-value="true"/> 
                   <input type="text" class="aantal" data-th-name="bestelArtikelen[__${stat.count}-1__].aantal" data-th-max="${artikel.voorraad}" value="0"/></span>
-                </div>
               </div>
             </div>
-          
-      </div>
-      <div class="row" align="right">
-        <div class="col-sm-12">
-          <button type="submit" class="btn btn-default input-lg">Bestel</button>
+          </div>
+
         </div>
-      </div>
-        </form>
-      
+        <div class="row" align="right">
+          <div class="col-sm-12">
+            <button type="submit" class="btn btn-default input-lg">Bestel</button>
+          </div>
+        </div>
+      </form>
+
       <div data-th-replace="fragments/layout :: footer">...</div>    
 
     </div>

@@ -25,15 +25,15 @@ and open the template in the editor.
         <div class="col-sm-12">
 
           <div data-th-if="${error != null}" data-th-text="${error}"></div>
-            <div class="error"><p data-th-if="not ${duplicateName== null}">De gekozen gebruikersnaam is al in gebruik.</p></div>
+          <div class="error"><p data-th-if="not ${duplicateName== null}">De gekozen gebruikersnaam is al in gebruik.</p></div>
 
           <form name="login" action="/account/nieuwAccount" method="post" class="horizontal" data-th-object="${account}">
+            <input data-th-if="${_csrf}" type="hidden" 
+                   data-th-name="${_csrf.parameterName}" 
+                   data-th-value="${_csrf.token}" />
             <div class="alert alert-danger" data-th-if="${#fields.hasErrors('*')}">
               <p data-th-each="err : ${#fields.errors('*')}" data-th-text="${err}"></p>    
             </div>              
-            <input type="hidden" 
-                   data-th-name="${_csrf.parameterName}" 
-                   data-th-value="${_csrf.token}" />
             <input type="hidden" data-th-if="${klantId != null}" data-th-value="${klantId}" name="klant" />
             <div class="form-group">
               <label for="gebruikersnaam" data-th-class="${#fields.hasErrors('gebruikersnaam')}? 'error col-sm-2' : 'col-sm-2'">Gebruikersnaam *</label>

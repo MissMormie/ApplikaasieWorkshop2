@@ -27,8 +27,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.authorizeRequests()
-            .antMatchers("/","/home","/logout", "/images/**", "/css/**").permitAll()
+    http.csrf().disable()
+          .authorizeRequests()
+            .antMatchers("/","/home","/logout", "/images/**", "/css/**", "/rest/**").permitAll()
             .antMatchers("/bestelling/admin").hasAnyAuthority("admin","medewerker")
             .antMatchers("/bestelling/**", "/klant/**", "/account/wijzigwachtwoord", "/account/saved").authenticated()
             .antMatchers("/**").hasAnyAuthority("admin","medewerker")
@@ -66,7 +67,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   }
   
   /*
-
   @Autowired
   public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
     auth

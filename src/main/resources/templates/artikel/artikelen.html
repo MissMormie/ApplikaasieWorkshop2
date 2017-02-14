@@ -18,12 +18,16 @@ and open the template in the editor.
   <body>
     <div class="container">
     <div data-th-replace="fragments/layout :: header">...</div>
-    <div class="title"><h1>Artikelen</h1></div>
       <div class="row">
+        <div class="col-sm-12 title"><h1>Artikelen</h1></div>
+ 
         <div class="col-sm-3" data-th-each="artikel : ${artikelList}">
           <div class="panel panel-primary">
             <div class="panel-heading"><span data-th-text="${artikel.naam}"></span><span class='pull-right'>&euro; <span data-th-text="${artikel.prijs}"></span></span></div>
-            <div class="panel-body"><img src="/images/placeholder.png" class="img-responsive" style="width:100%" alt="Placeholder"/></div>
+            <div class="panel-body">
+              <img data-th-if="${artikel.image == null}" src="/images/placeholder.png" class="img-responsive" style="width:100%" alt="placeholder"/>
+              <img data-th-if="${artikel.image != null}" data-th-src="${'/images/artikelen/' + artikel.image}" class="img-responsive" style="height:100%"/>
+            </div>
             <div class="panel-footer">
               <div class="col-sm-6">Voorraad: <span data-th-text="${artikel.voorraad}"></span></div>
               <div class="col-sm-6" align="right"><a href="#" data-th-href="@{|/artikel/${artikel.id}/edit|}"><span class="glyphicon glyphicon-pencil"></span></a> &nbsp;&nbsp;

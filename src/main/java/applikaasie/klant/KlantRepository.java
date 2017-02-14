@@ -40,6 +40,8 @@ public interface KlantRepository extends CrudRepository<Klant, Long> {
   public List<Klant> findKlantByVoornaamAndDeletedFalse(String voornaam);
 
   public List<Klant> findKlantByAchternaamAndDeletedFalse(String achternaam);
+  
+  public Klant findKlantByIdKlantAndDeletedFalse(long idKlant);
 
   // -------------------------- UPDATE ------------------------------
   

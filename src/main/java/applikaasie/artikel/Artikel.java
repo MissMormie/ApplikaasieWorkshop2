@@ -39,16 +39,27 @@ public class Artikel implements Serializable {
   private int voorraad;
 
   private boolean deleted;
+  
+  private String image;
 
   public Artikel() {
   }
-    
+  
   public Artikel(long id, String naam, double prijs, int voorraad, boolean deleted) {
     this.id = id;
     this.naam = naam;
     this.prijs = prijs;
     this.voorraad = voorraad;
     this.deleted = deleted;
+  }
+    
+  public Artikel(long id, String naam, double prijs, int voorraad, boolean deleted, String image) {
+    this.id = id;
+    this.naam = naam;
+    this.prijs = prijs;
+    this.voorraad = voorraad;
+    this.deleted = deleted;
+    this.image = image;
   }
 
   public long getId() {
@@ -90,4 +101,14 @@ public class Artikel implements Serializable {
   public void setDeleted(boolean deleted) {
     this.deleted = deleted;
   }
+
+  public String getImage() {
+    return image;
+  }
+
+  public void setImage(String image) {
+    this.image = image;
+  }
+  
+  
 }

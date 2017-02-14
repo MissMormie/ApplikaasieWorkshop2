@@ -19,7 +19,7 @@ and open the template in the editor.
     <div class="container">
       <div data-th-replace="fragments/layout :: header">...</div>
       <div class="row">
-      <div class="title col-sm-12"><h1>edit account</h1></div>
+        <div class="title col-sm-12"><h1>edit account</h1></div>
         <div class="col-sm-12">
 
           <div data-th-if="${error != null}" data-th-text="${error}"></div>
@@ -28,6 +28,9 @@ and open the template in the editor.
             <form name="login" data-th-action="${editType != null} ?
                   @{/account/wijzigwachtwoord} :
                   @{/account/edit}" data-th-object="${account}" method="post" class="horizontal">
+              <input data-th-if="${_csrf}" type="hidden" 
+                     data-th-name="${_csrf.parameterName}" 
+                     data-th-value="${_csrf.token}" />
               <input type="hidden" data-th-field="*{id}"/>
               <div class="form-group">
                 <label for="gebruikersnaam" class="col-sm-2">Gebruikersnaam *</label>

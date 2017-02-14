@@ -25,6 +25,9 @@ and open the template in the editor.
 
           <form data-th-action="@{|/klant/${klant.idKlant}/editKlant|}" data-th-object="${klant}" method="post" class="form-horizontal">
             <input type="hidden" data-th-field="*{idKlant}"/>
+              <input data-th-if="${_csrf}" type="hidden" 
+               data-th-name="${_csrf.parameterName}" 
+               data-th-value="${_csrf.token}" />
 
             <div class="form-group">
               <label for="voornaam" class="col-sm-2">Voornaam *</label>

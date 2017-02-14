@@ -18,11 +18,16 @@ and open the template in the editor.
   <body>
     <div class="container">
       <div data-th-replace="fragments/layout :: header">...</div>
-      <div class="title"><h1>Artikel verwijderd</h1></div>
-      <div>Het artikel is succesvol verwijderd. Je kunt ze nog net de laatste kazen weg zien halen.<br/><br/>
-        <img src="/images/runningwithcheese.jpg"/></div>
-      <div data-th-replace="fragments/layout :: footer">...</div>    
+      <div class="row">
+        <div class="col-sm-12 title"><h1>Artikel verwijderd</h1></div>
+        <div class="col-sm-12">Het artikel is succesvol verwijderd. Je kunt ze nog net de laatste kazen weg zien halen.<br/>            
+          <img src="/images/runningwithcheese.jpg"/>
 
+        </div>
+      </div>
+      <div data-th-replace="fragments/layout :: footer">...</div>    
     </div>
   </body>
 </html>
+      
+      

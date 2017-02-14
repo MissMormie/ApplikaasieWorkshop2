@@ -18,7 +18,7 @@ and open the template in the editor.
     <div class="container">
       <div data-th-replace="fragments/layout :: header">...</div>
       <form name="newOrder" action="/klant/nieuw" method="POST" class="form-horizontal">
-        <input type="hidden" 
+        <input data-th-if="${_csrf}" type="hidden" 
                data-th-name="${_csrf.parameterName}" 
                data-th-value="${_csrf.token}" />
         <div class="row">

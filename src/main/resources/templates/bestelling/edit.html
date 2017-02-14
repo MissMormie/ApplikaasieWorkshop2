@@ -19,9 +19,10 @@ and open the template in the editor.
       <div data-th-replace="fragments/layout :: header">...</div>
 
       <form name="newOrder" data-th-action="@{|/bestelling/admin/${bestelId}/edit|}" method="POST" class="horizontal">
-        <input type="hidden" 
+        <input data-th-if="${_csrf}" type="hidden" 
                data-th-name="${_csrf.parameterName}" 
-               data-th-value="${_csrf.token}" />      <div class="row">
+               data-th-value="${_csrf.token}" />
+        <div class="row">
           <div class="row">
             <div class="title col-sm-12"><h1>Wijzig bestelling</h1></div>
             <div class="col-sm-3" data-th-each="artikel, stat : ${artikelLijst}">
@@ -40,7 +41,7 @@ and open the template in the editor.
         </div>
         <div class="row" align="right">
           <div class="col-sm-12">
-          <button type="submit" class="btn btn-default input-lg">Bestel</button>
+            <button type="submit" class="btn btn-default input-lg">Bestel</button>
           </div>
         </div>
       </form>

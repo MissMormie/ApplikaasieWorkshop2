@@ -5,6 +5,8 @@
  */
 package applikaasie;
 
+import applikaasie.utility.storage.StorageProperties;
+import applikaasie.utility.storage.StorageService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +19,7 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor;
@@ -38,8 +41,21 @@ public class startApp {
   private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "true";
   private static final String PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN = "entitymanager.packages.to.scan";
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
     SpringApplication.run(startApp.class, args);
+  }
+
+  @Bean
+  CommandLineRunner init(StorageService storageService) {
+    return (args) -> {
+//      storageService.deleteAll();
+      storageService.init();
+    };
+  }
+  
+  @Bean
+  public StorageProperties storageProperties() {
+    return new StorageProperties();
   }
 
   @Bean
@@ -83,8 +99,7 @@ public class startApp {
             // additional customizations
             .build();
   }*/
-  
-  /*
+ /*
   @Bean
   public DriverManagerDataSource dataSource(){
       DriverManagerDataSource ds = new DriverManagerDataSource();
@@ -94,5 +109,5 @@ public class startApp {
       ds.setPassword(PROPERTY_NAME_DATABASE_PASSWORD);
       return ds;
   }  
-*/
+   */
 }

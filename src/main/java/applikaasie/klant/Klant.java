@@ -4,6 +4,7 @@ import applikaasie.klant.adres.Adres;
 import applikaasie.klant.adres.AdresType;
 import applikaasie.klant.adres.AdresTypeObject;
 import applikaasie.klant.adres.KlantHeeftAdres;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;

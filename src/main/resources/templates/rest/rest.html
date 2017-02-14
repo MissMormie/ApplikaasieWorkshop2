@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+  <head data-th-fragment="head">
+    <title>Piets Kazen - Kaziger krijg je ze niet</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" data-th-href="@{/css/applikaasie.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/js/test.js"/>
+
+  </head>
+  <body>
+    <div class="container">
+    <div data-th-fragment="header">
+      <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span> 
+            </button>
+            <a class="navbar-brand" href="/"><img data-th-src="@{/images/logo.png}" src="images/logo.png" class="logo"/></a>
+          </div>        
+          <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav navbar-left">
+              <li data-sec-authorize="isAuthenticated()"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Bestellingen
+                  <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li data-sec-authorize="hasAuthority('klant')"><a href="/bestelling/nieuweBestelling.html">Nieuwe bestelling</a></li>
+                  <li data-sec-authorize="hasAuthority('klant')"><a href="/bestelling/mijnBestellingen.html">Bekijk bestellingen</a></li>
+                  <li data-sec-authorize="hasAnyAuthority('admin', 'medewerker')"><a href="/bestelling/alleBestellingen.html">Bekijk bestellingen</a></li>
+
+                </ul>
+              </li>
+              <li data-sec-authorize="hasAnyAuthority('admin', 'medewerker')"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Artikelen
+                  <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="/artikel/nieuwArtikel">Nieuw Artikel</a></li>
+                  <li><a href="/artikel/artikelen">Bekijk Artikelen</a></li>
+                </ul>
+              </li>            
+              <li data-sec-authorize="hasAnyAuthority('admin', 'medewerker')"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Klanten                
+                  <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="/klant/nieuw">Nieuwe klant</a></li>
+                  <li><a href="/klant/klanten">Bekijk alle klanten</a></li>
+                </ul></li>
+              <li data-sec-authorize="hasAuthority('admin')"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Accounts   
+                  <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="/account/accounts">Bekijk alle accounts</a></li>
+                  <li><a href="/account/nieuwAccount">Nieuw medewerker account</a></li>
+                </ul>
+              </li>
+              <!--
+              <li><a class="dropdown-toggle" data-toggle="dropdown" href="#">Instellingen                
+                  <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="./connectionPool.html">Connection pool</a></li>
+                  <li><a href="./database.html">Database</a></li>
+                </ul>
+              </li>
+              -->
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Meer
+                  <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Bijzondere kazen</a></li>
+                </ul>
+              </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li data-sec-authorize="isAuthenticated()"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Account                
+                  <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="/account/wijzigwachtwoord">Wijzig wachtwoord</a></li>
+                  <li data-sec-authorize="hasAuthority('klant')"><a href="/klant/mijngegevens">Bekijk persoonsgegevens</a></li>
+                  <li><a data-th-href="@{/logout}">Uitloggen</a></li>
+                </ul></li>
+            </ul>
+          </div>
+        </div>
+      </nav>  
+    </div>
+      <!-- Content starts here -->
+      <div class="row" id="content">
+        
+      </div>
+    <div data-th-fragment="footer">
+      <footer class="container-fluid text-center">
+        <p>(C) Piet</p>
+
+      </footer>
+    </div>
+      
+    </div>
+
+  </body>
+</html>

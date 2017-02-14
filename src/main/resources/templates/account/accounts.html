@@ -26,9 +26,7 @@ and open the template in the editor.
             <tr data-th-each="account : ${accountList}">
               <td data-th-text="${account.id}"></td>
               <td data-th-text="${account.gebruikersnaam}"></td>
-              <td></td>
-              <!-- TODO figure out why this suddenly doesn't work? -->
-              <!--<td data-th-text="${account.accountStatus}"></td>-->
+              <td data-th-text="${account.accountStatus}"></td>
               <td>
                 <a href="#" data-th-href="@{/account/edit(id=${account.id})}"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;&nbsp;
                 <a href="#" data-th-href="@{/account/delete(id=${account.id})}"><span class="glyphicon glyphicon-trash"></span></a>
